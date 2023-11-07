@@ -9,24 +9,24 @@
 #include <utility>
 
 namespace pbrain {
-    class commandHandler {
-    public:
-        static commandHandler &getInstance() {
-            static commandHandler instance("command");
-            return instance;
-        }
+class commandHandler {
+public:
+  static commandHandler &getInstance() {
+    static commandHandler instance("command");
+    return instance;
+  }
 
-        commandHandler() = default;
+  commandHandler() = default;
 
-        explicit commandHandler(std::string command) : command(std::move(command)) {};
+  explicit commandHandler(std::string command) : command(std::move(command)){};
 
-        ~commandHandler() = default;
+  ~commandHandler() = default;
 
-        static void checkCommand(const std::string &command);
+  static void checkCommand(const std::string &command);
 
-    private:
-        std::string command;
-    };
+private:
+  std::string command;
+};
 } // namespace pbrain
 
 #endif // AGIN_COMMANDHANDLER_HPP
