@@ -22,7 +22,7 @@ namespace pbrain {
                                            << std::endl;
                              }},
                 {"RESTART",  []() { std::cout << "OK" << std::endl; }},
-                {"TAKEBACK", []() { std::cout << "OK" << std::endl; }},
+                {"TAKEBACK", []() { std::cout << "KO" << std::endl; }},
                 {"PLAY",     []() { std::cout << "OK" << std::endl; }},
                 {"SET",      []() { std::cout << "OK" << std::endl; }},
                 {"UNDO",     []() { std::cout << "OK" << std::endl; }},
