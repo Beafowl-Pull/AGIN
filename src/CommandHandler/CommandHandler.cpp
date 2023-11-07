@@ -2,9 +2,9 @@
 // Created by beafowl on 07/11/23.
 //
 
+#include "CommandHandler.hpp"
 #include <functional>
 #include <iostream>
-#include "CommandHandler.hpp"
 #include <unordered_map>
 
 namespace pbrain {
