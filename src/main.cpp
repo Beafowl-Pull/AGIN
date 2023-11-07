@@ -7,9 +7,12 @@
 #include <string>
 
 int main() {
-  std::string s;
-  while (std::cin >> s) {
-    pbrain::commandHandler::getInstance().checkCommand(s);
-  }
-  return 0;
+    std::string s;
+    while (std::cin >> s) {
+        if (s == "END") {
+            break;
+        }
+        pbrain::commandHandler::getInstance().checkCommand(s);
+    }
+    return 0;
 }
