@@ -3,8 +3,13 @@
 //
 
 #include <iostream>
+#include <string>
+#include "CommandHandler.hpp"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    std::string s;
+    while (std::cin >> s) {
+        pbrain::commandHandler::getInstance().checkCommand(s);
+    }
     return 0;
 }
