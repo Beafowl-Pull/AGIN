@@ -32,7 +32,7 @@ namespace pbrain {
 
             void startGame(const std::string &command);
 
-            void doTurn(const std::string &command) const;
+            void doTurn(const std::string &command);
 
             void doBegin() const;
 
@@ -40,6 +40,7 @@ namespace pbrain {
             CommandHandler();
             ~CommandHandler() = default;
             bool _gameStarted = false;
+            bool _turnStarted = false;
             std::unordered_map<std::string, std::function<void()>> _commandsMap;
             std::string _parsedCommand;
             std::string _commands;

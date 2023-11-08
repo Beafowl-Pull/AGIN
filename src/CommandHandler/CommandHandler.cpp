@@ -49,7 +49,7 @@ namespace pbrain {
                 std::cerr << "ERROR " << e.what() << std::endl;
             }
         } else {
-            std::cout << "ERROR Command not found" << std::endl;
+            std::cerr << "ERROR Command not found" << std::endl;
         }
     }
 
@@ -65,11 +65,14 @@ namespace pbrain {
         }
     }
 
-    void CommandHandler::doTurn(const std::string &command) const
+    void CommandHandler::doTurn(const std::string &command)
     {
         if (!_gameStarted) {
             throw std::invalid_argument("Game not started");
             return;
+        }
+        if (!_turnStarted) {
+            _turnStarted = true;
         }
         std::string x =
             command.substr(command.find(' ') + 1, command.find(' ', command.find(' ') + 1) - command.find(' ') - 1);
@@ -79,8 +82,8 @@ namespace pbrain {
 
     void CommandHandler::doBegin() const
     {
-        if (!_gameStarted) {
-            throw std::invalid_argument("Game not started");
+        if (!_gameStarted || _turnStarted) {
+            throw std::invalid_argument("Game not started or a turn has already been played");
             return;
         }
         std::cout << "BEGIN" << std::endl;
