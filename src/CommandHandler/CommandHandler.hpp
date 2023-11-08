@@ -14,21 +14,19 @@ namespace pbrain {
         public:
             static commandHandler &getInstance()
             {
-                static commandHandler instance("command");
+                static commandHandler instance;
                 return instance;
             }
 
             commandHandler() = default;
 
-            explicit commandHandler(std::string command)
-                : command(std::move(command)) {};
-
             ~commandHandler() = default;
 
             static void checkCommand(const std::string &command);
 
-        private:
-            std::string command;
+            static void startGame(const std::string &command);
+
+            static void doTurn(const std::string &command);
     };
 } // namespace pbrain
 
