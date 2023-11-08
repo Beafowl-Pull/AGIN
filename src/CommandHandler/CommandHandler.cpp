@@ -22,9 +22,17 @@ namespace pbrain {
                                  throw pbrain::Error(e.what());
                              }
                          }},
-                        {"TURN", [this] {
+                        {"TURN",
+                         [this] {
                              try {
                                  CommandHandler::doTurn(_commands);
+                             } catch (std::invalid_argument &e) {
+                                 throw pbrain::Error(e.what());
+                             }
+                         }},
+                        {"BEGIN", [this] {
+                             try {
+                                 CommandHandler::doBegin();
                              } catch (std::invalid_argument &e) {
                                  throw pbrain::Error(e.what());
                              }
@@ -43,7 +51,7 @@ namespace pbrain {
                 std::cerr << "ERROR " << e.what() << std::endl;
             }
         } else {
-            std::cout << "ERROR Command not found" << std::endl;
+            std::cerr << "ERROR Command not found" << std::endl;
         }
     }
 
@@ -55,14 +63,31 @@ namespace pbrain {
             return;
         } else {
             std::cout << "OK" << std::endl;
+            _gameStarted = true;
         }
     }
 
     void CommandHandler::doTurn(const std::string &command)
     {
+        if (!_gameStarted) {
+            throw std::invalid_argument("Game not started");
+            return;
+        }
+        if (!_turnStarted) {
+            _turnStarted = true;
+        }
         std::string x =
             command.substr(command.find(' ') + 1, command.find(' ', command.find(' ') + 1) - command.find(' ') - 1);
         std::string y = command.substr(command.find(' ', command.find(' ') + 1) + 1);
         std::cout << x << " " << y << std::endl;
+    }
+
+    void CommandHandler::doBegin() const
+    {
+        if (!_gameStarted || _turnStarted) {
+            throw std::invalid_argument("Game not started or a turn has already been played");
+            return;
+        }
+        std::cout << "BEGIN" << std::endl;
     }
 } // namespace pbrain
