@@ -7,11 +7,12 @@
 
 #pragma once
 
-#include <vector>
 #include <iostream>
+#include <vector>
 
 namespace Main {
-    class Main {
+    class Main
+    {
         public:
             Main() = default;
             ~Main() = default;
@@ -22,4 +23,4 @@ namespace Main {
         private:
             int runApp();
     };
-}
+} // namespace Main

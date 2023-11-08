@@ -25,9 +25,9 @@ namespace Main {
             try {
                 pbrain::CommandHandler::getInstance().checkCommand(command);
             } catch (pbrain::Error &e) {
-                return (EXIT_FAILURE);
+                std::cerr << e.what() << std::endl;
             }
         }
         return (EXIT_SUCCESS);
     }
-}
+} // namespace Main
