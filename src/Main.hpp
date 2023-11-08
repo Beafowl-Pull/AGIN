@@ -7,21 +7,21 @@
 
 #pragma once
 
-#include <vector>
 #include <iostream>
+#include <vector>
 
 namespace Main {
-    class Main {
-        public:
-            Main() = default;
-            ~Main() = default;
+class Main {
+public:
+  Main() = default;
+  ~Main() = default;
 
-            int operator()();
+  int operator()();
 
-        protected:
-        private:
-            int runApp();
+protected:
+private:
+  int runApp();
 
-            int _retValue;
-    };
-}
+  int _retValue;
+};
+} // namespace Main

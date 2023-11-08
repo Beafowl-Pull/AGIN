@@ -5,8 +5,8 @@
 #include "Main.hpp"
 
 int main(void) {
-    Main::Main main;
+  Main::Main main;
 
-    int retValue = main();
-    return retValue;
+  int retValue = main();
+  return retValue;
 }

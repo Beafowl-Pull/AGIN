@@ -8,14 +8,10 @@
 #include "Main.hpp"
 
 namespace Main {
-    int Main::operator()()
-    {
-        _retValue = runApp();
-        return (_retValue);
-    }
-
-    int Main::runApp()
-    {
-        return (0);
-    }
+int Main::operator()() {
+  _retValue = runApp();
+  return (_retValue);
 }
+
+int Main::runApp() { return (0); }
+} // namespace Main
