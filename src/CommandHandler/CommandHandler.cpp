@@ -14,9 +14,17 @@ namespace pbrain {
     CommandHandler::CommandHandler()
         : _commands(" ")
     {
-        _commandsMap = {{"START", [this] {
+        _commandsMap = {{"START",
+                         [this] {
                              try {
                                  CommandHandler::startGame(_commands);
+                             } catch (std::invalid_argument &e) {
+                                 throw pbrain::Error(e.what());
+                             }
+                         }},
+                        {"TURN", [this] {
+                             try {
+                                 CommandHandler::doTurn(_commands);
                              } catch (std::invalid_argument &e) {
                                  throw pbrain::Error(e.what());
                              }
@@ -48,5 +56,13 @@ namespace pbrain {
         } else {
             std::cout << "OK" << std::endl;
         }
+    }
+
+    void CommandHandler::doTurn(const std::string &command)
+    {
+        std::string x =
+            command.substr(command.find(' ') + 1, command.find(' ', command.find(' ') + 1) - command.find(' ') - 1);
+        std::string y = command.substr(command.find(' ', command.find(' ') + 1) + 1);
+        std::cout << x << " " << y << std::endl;
     }
 } // namespace pbrain

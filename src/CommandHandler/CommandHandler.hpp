@@ -32,6 +32,8 @@ namespace pbrain {
 
             static void startGame(const std::string &command);
 
+            static void doTurn(const std::string &command);
+
         private:
             CommandHandler();
             ~CommandHandler() = default;
