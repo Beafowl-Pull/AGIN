@@ -27,16 +27,14 @@ namespace pbrain {
                 static CommandHandler instance;
                 return instance;
             }
-
-            CommandHandler();
-
-            ~CommandHandler() = default;
-
+            
             void checkCommand(const std::string &command);
 
             static void startGame(const std::string &command);
 
         private:
+            CommandHandler();
+            ~CommandHandler() = default;
             std::unordered_map<std::string, std::function<void()>> _commandsMap;
             std::string _parsedCommand;
             std::string _commands;
