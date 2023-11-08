@@ -4,7 +4,7 @@
 
 #include "Main.hpp"
 
-int main(int ac, const char *av[]) {
+int main(void) {
     Main::Main main;
 
     int retValue = main();

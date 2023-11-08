@@ -13,4 +13,9 @@ namespace Main {
         _retValue = runApp();
         return (_retValue);
     }
+
+    int Main::runApp()
+    {
+        return (0);
+    }
 }
