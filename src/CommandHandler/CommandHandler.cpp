@@ -56,6 +56,10 @@ namespace pbrain {
 
     void CommandHandler::startGame(const std::string &command)
     {
+        if (command.size() < START_LENGHT) {
+            throw std::invalid_argument("Invalid size");
+            return;
+        }
         std::string size = command.substr(START_LENGHT);
         if (std::stoi(size) > BOARD_SIZE_MAX || std::stoi(size) < BOARD_SIZE_MIN) {
             throw std::invalid_argument("Invalid size");
@@ -68,6 +72,8 @@ namespace pbrain {
 
     void CommandHandler::doTurn(const std::string &command)
     {
+        int position = 0;
+
         if (!_gameStarted) {
             throw std::invalid_argument("Game not started");
             return;
@@ -75,9 +81,12 @@ namespace pbrain {
         if (!_turnStarted) {
             _turnStarted = true;
         }
-        std::string x =
-            command.substr(command.find(' ') + 1, command.find(' ', command.find(' ') + 1) - command.find(' ') - 1);
-        std::string y = command.substr(command.find(' ', command.find(' ') + 1) + 1);
+        if (command.find(' ') == std::string::npos || command.find(",") == std::string::npos) {
+            throw std::invalid_argument("Invalid coordinates");
+            return;
+        }
+        int x = std::stoi(command.substr(command.find(' ') + 1, command.find(',') - command.find(' ') - 1));
+        int y = std::stoi(command.substr(command.find(',') + 1));
         std::cout << x << " " << y << std::endl;
     }
 
