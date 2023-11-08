@@ -16,6 +16,14 @@ namespace pbrain {
     class Error : public std::exception
     {
         public:
+            Error(const Error &other) = default;
+
+            Error &operator=(const Error &other) = default;
+
+            Error(Error &&other) noexcept = default;
+
+            Error &operator=(Error &&other) noexcept = default;
+
             explicit Error(std::string message)
                 : _message(std::move(message))
             {}
