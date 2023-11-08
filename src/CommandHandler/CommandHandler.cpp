@@ -11,22 +11,27 @@
 #include <unordered_map>
 
 namespace pbrain {
-    void CommandHandler::checkCommand(const std::string &command)
+    CommandHandler::CommandHandler() : _commands(" ")
     {
-        std::unordered_map<std::string, std::function<void()>> commands = {
-            {"START", [command] {
+        _commandsMap = {
+            {"START", [this] {
                 try {
-                    CommandHandler::startGame(command);
+                    CommandHandler::startGame(_commands);
                 } catch (std::invalid_argument &e) {
                     throw pbrain::Error(e.what());
                 }
             }}
         };
-        std::string parsedCommand = command.substr(0, command.find(' '));
+    }
 
-        if (commands.find(parsedCommand) != commands.end()) {
+    void CommandHandler::checkCommand(const std::string &command)
+    {
+        _parsedCommand = command.substr(0, command.find(' '));
+        _commands = command;
+
+        if (_commandsMap.find(_parsedCommand) != _commandsMap.end()) {
             try {
-                commands[parsedCommand]();
+                _commandsMap[_parsedCommand]();
             } catch (pbrain::Error &e) {
                 std::cerr << "ERROR " << e.what() << std::endl;
             }
@@ -37,7 +42,7 @@ namespace pbrain {
 
     void CommandHandler::startGame(const std::string &command)
     {
-        std::string size = command.substr(6);
+        std::string size = command.substr(START_LENGHT);
         if (std::stoi(size) > BOARD_SIZE_MAX || std::stoi(size) < BOARD_SIZE_MIN) {
             throw std::invalid_argument("Invalid size");
             return;

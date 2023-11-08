@@ -7,24 +7,39 @@
 
 #include <string>
 #include <utility>
+#include <functional>
+#include <unordered_map>
 
 namespace pbrain {
     class CommandHandler
     {
         public:
+            CommandHandler(const CommandHandler &other) = delete;
+
+            CommandHandler &operator=(const CommandHandler &other) = delete;
+
+            CommandHandler(CommandHandler &&other) noexcept = delete;
+
+            CommandHandler &operator=(CommandHandler &&other) noexcept = delete;
+
             static CommandHandler &getInstance()
             {
                 static CommandHandler instance;
                 return instance;
             }
 
-            CommandHandler() = default;
+            CommandHandler();
 
             ~CommandHandler() = default;
 
-            static void checkCommand(const std::string &command);
+            void checkCommand(const std::string &command);
 
             static void startGame(const std::string &command);
+
+        private:
+            std::unordered_map<std::string, std::function<void()>> _commandsMap;
+            std::string _parsedCommand;
+            std::string _commands;
     };
 } // namespace pbrain
 

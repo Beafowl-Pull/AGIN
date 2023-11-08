@@ -8,12 +8,12 @@
 
 int main()
 {
-    std::string s;
-    while (std::getline(std::cin, s)) {
-        if (s == "END") {
+    std::string command;
+    while (std::getline(std::cin, command)) {
+        if (command == "END") {
             break;
         }
-        pbrain::CommandHandler::getInstance().checkCommand(s);
+        pbrain::CommandHandler::getInstance().checkCommand(command);
     }
     return 0;
 }
