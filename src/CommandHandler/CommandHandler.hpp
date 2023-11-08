@@ -22,11 +22,16 @@ namespace pbrain {
 
             ~commandHandler() = default;
 
-            static void checkCommand(const std::string &command);
+            void checkCommand(const std::string &command);
 
-            static void startGame(const std::string &command);
+            void startGame(const std::string &command);
 
-            static void doTurn(const std::string &command);
+            void doTurn(const std::string &command) const;
+
+            void doBegin() const;
+
+        private:
+            bool _gameStarted = false;
     };
 } // namespace pbrain
 

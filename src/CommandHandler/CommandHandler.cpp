@@ -14,21 +14,27 @@ namespace pbrain {
     void commandHandler::checkCommand(const std::string &command)
     {
         std::unordered_map<std::string, std::function<void()>> commands = {
-            {"START", [command] {
+            {"START", [command, this] {
                 try {
                     commandHandler::startGame(command);
                 } catch (std::invalid_argument &e) {
                     throw pbrain::Error(e.what());
                 }
             }},
-            {"TURN", [command] {
+            {"TURN", [command, this] {
                 try {
                     commandHandler::doTurn(command);
                 } catch (std::invalid_argument &e) {
                     throw pbrain::Error(e.what());
                 }
+            }},
+            {"BEGIN", [command, this] {
+                try {
+                    commandHandler::doBegin();
+                } catch (std::invalid_argument &e) {
+                    throw pbrain::Error(e.what());
+                }
             }}
-            
         };
         std::string parsedCommand = command.substr(0, command.find(' '));
 
@@ -51,12 +57,26 @@ namespace pbrain {
             return;
         } else {
             std::cout << "OK" << std::endl;
+            _gameStarted = true;
         }
     }
 
-    void commandHandler::doTurn(const std::string &command) {
+    void commandHandler::doTurn(const std::string &command) const {
+        if (!_gameStarted) {
+            throw std::invalid_argument("Game not started");
+            return;
+        }
         std::string x = command.substr(command.find(' ') + 1, command.find(' ', command.find(' ') + 1) - command.find(' ') - 1);
         std::string y = command.substr(command.find(' ', command.find(' ') + 1) + 1);
         std::cout << x << " " << y << std::endl;
+    }
+
+    void commandHandler::doBegin() const
+    {
+        if (!_gameStarted) {
+            throw std::invalid_argument("Game not started");
+            return;
+        }
+        std::cout << "BEGIN" << std::endl;
     }
 } // namespace pbrain
