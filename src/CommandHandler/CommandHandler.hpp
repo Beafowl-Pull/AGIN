@@ -27,7 +27,7 @@ namespace pbrain {
                 static CommandHandler instance;
                 return instance;
             }
-            
+
             void checkCommand(const std::string &command);
 
             static void startGame(const std::string &command);
