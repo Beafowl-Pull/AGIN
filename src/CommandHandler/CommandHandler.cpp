@@ -5,10 +5,10 @@
 #include "CommandHandler.hpp"
 #include <functional>
 #include <iostream>
+#include "Error.hpp"
+#include "Values.hpp"
 #include <type_traits>
 #include <unordered_map>
-#include "Values.hpp"
-#include "Error.hpp"
 
 namespace pbrain {
     void CommandHandler::checkCommand(const std::string &command)
@@ -20,15 +20,7 @@ namespace pbrain {
                 } catch (std::invalid_argument &e) {
                     throw pbrain::Error(e.what());
                 }
-            }},
-            {"TURN", [command] {
-                try {
-                    CommandHandler::doTurn(command);
-                } catch (std::invalid_argument &e) {
-                    throw pbrain::Error(e.what());
-                }
             }}
-            
         };
         std::string parsedCommand = command.substr(0, command.find(' '));
 
@@ -52,11 +44,5 @@ namespace pbrain {
         } else {
             std::cout << "OK" << std::endl;
         }
-    }
-
-    void CommandHandler::doTurn(const std::string &command) {
-        std::string x = command.substr(command.find(' ') + 1, command.find(' ', command.find(' ') + 1) - command.find(' ') - 1);
-        std::string y = command.substr(command.find(' ', command.find(' ') + 1) + 1);
-        std::cout << x << " " << y << std::endl;
     }
 } // namespace pbrain

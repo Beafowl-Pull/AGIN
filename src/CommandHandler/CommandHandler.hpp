@@ -25,8 +25,6 @@ namespace pbrain {
             static void checkCommand(const std::string &command);
 
             static void startGame(const std::string &command);
-
-            static void doTurn(const std::string &command);
     };
 } // namespace pbrain
 

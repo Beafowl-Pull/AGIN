@@ -21,7 +21,7 @@ namespace pbrain {
             {}
 
             ~Error() override = default;
-            
+
             [[nodiscard]] const char *what() const noexcept override
             {
                 return _message.c_str();
