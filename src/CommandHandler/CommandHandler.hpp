@@ -5,22 +5,28 @@
 #ifndef AGIN_COMMANDHANDLER_HPP
 #define AGIN_COMMANDHANDLER_HPP
 
+#include <functional>
 #include <string>
 #include <utility>
+#include <unordered_map>
 
 namespace pbrain {
-    class commandHandler
+    class CommandHandler
     {
         public:
-            static commandHandler &getInstance()
+            CommandHandler(const CommandHandler &other) = delete;
+
+            CommandHandler &operator=(const CommandHandler &other) = delete;
+
+            CommandHandler(CommandHandler &&other) noexcept = delete;
+
+            CommandHandler &operator=(CommandHandler &&other) noexcept = delete;
+
+            static CommandHandler &getInstance()
             {
-                static commandHandler instance;
+                static CommandHandler instance;
                 return instance;
             }
-
-            commandHandler() = default;
-
-            ~commandHandler() = default;
 
             void checkCommand(const std::string &command);
 
@@ -31,7 +37,12 @@ namespace pbrain {
             void doBegin() const;
 
         private:
+            CommandHandler();
+            ~CommandHandler() = default;
             bool _gameStarted = false;
+            std::unordered_map<std::string, std::function<void()>> _commandsMap;
+            std::string _parsedCommand;
+            std::string _commands;
     };
 } // namespace pbrain
 

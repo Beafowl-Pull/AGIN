@@ -11,36 +11,40 @@
 #include <unordered_map>
 
 namespace pbrain {
-    void commandHandler::checkCommand(const std::string &command)
+    CommandHandler::CommandHandler()
+        : _commands(" ")
     {
-        std::unordered_map<std::string, std::function<void()>> commands = {{"START",
-                                                                            [command, this] {
-                                                                                try {
-                                                                                    commandHandler::startGame(command);
-                                                                                } catch (std::invalid_argument &e) {
-                                                                                    throw pbrain::Error(e.what());
-                                                                                }
-                                                                            }},
-                                                                           {"TURN",
-                                                                            [command, this] {
-                                                                                try {
-                                                                                    commandHandler::doTurn(command);
-                                                                                } catch (std::invalid_argument &e) {
-                                                                                    throw pbrain::Error(e.what());
-                                                                                }
-                                                                            }},
-                                                                           {"BEGIN", [command, this] {
-                                                                                try {
-                                                                                    commandHandler::doBegin();
-                                                                                } catch (std::invalid_argument &e) {
-                                                                                    throw pbrain::Error(e.what());
-                                                                                }
-                                                                            }}};
-        std::string parsedCommand = command.substr(0, command.find(' '));
+        _commandsMap = {{"START", [this] {
+                             try {
+                                 CommandHandler::startGame(_commands);
+                             } catch (std::invalid_argument &e) {
+                                 throw pbrain::Error(e.what());
+                             }
+                         }},
+                         {"TURN", [this] {
+                            try {
+                                CommandHandler::doTurn(_commands);
+                            } catch (std::invalid_argument &e) {
+                                throw pbrain::Error(e.what());
+                            }
+                         }},
+                         {"BEGIN", [this] {
+                            try {
+                                CommandHandler::doBegin();
+                            } catch (std::invalid_argument &e) {
+                                throw pbrain::Error(e.what());
+                            }
+                         }}};
+    }
 
-        if (commands.find(parsedCommand) != commands.end()) {
+    void CommandHandler::checkCommand(const std::string &command)
+    {
+        _parsedCommand = command.substr(0, command.find(' '));
+        _commands = command;
+
+        if (_commandsMap.find(_parsedCommand) != _commandsMap.end()) {
             try {
-                commands[parsedCommand]();
+                _commandsMap[_parsedCommand]();
             } catch (pbrain::Error &e) {
                 std::cerr << "ERROR " << e.what() << std::endl;
             }
@@ -49,9 +53,9 @@ namespace pbrain {
         }
     }
 
-    void commandHandler::startGame(const std::string &command)
+    void CommandHandler::startGame(const std::string &command)
     {
-        std::string size = command.substr(6);
+        std::string size = command.substr(START_LENGHT);
         if (std::stoi(size) > BOARD_SIZE_MAX || std::stoi(size) < BOARD_SIZE_MIN) {
             throw std::invalid_argument("Invalid size");
             return;
@@ -61,7 +65,7 @@ namespace pbrain {
         }
     }
 
-    void commandHandler::doTurn(const std::string &command) const
+    void CommandHandler::doTurn(const std::string &command) const
     {
         if (!_gameStarted) {
             throw std::invalid_argument("Game not started");
@@ -73,7 +77,7 @@ namespace pbrain {
         std::cout << x << " " << y << std::endl;
     }
 
-    void commandHandler::doBegin() const
+    void CommandHandler::doBegin() const
     {
         if (!_gameStarted) {
             throw std::invalid_argument("Game not started");
