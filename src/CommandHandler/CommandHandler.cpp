@@ -8,7 +8,7 @@
 #include <unordered_map>
 
 namespace pbrain {
-    void commandHandler::checkCommand(const std::string &command)
+    void CommandHandler::checkCommand(const std::string &command)
     {
         std::unordered_map<std::string, std::function<void()>> commands = {
             {"START",
