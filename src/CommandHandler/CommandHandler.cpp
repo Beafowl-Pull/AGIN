@@ -22,7 +22,8 @@ namespace pbrain {
                                  throw pbrain::Error(e.what());
                              }
                          }},
-                        {"TURN", [this] {
+                        {"TURN",
+                         [this] {
                              try {
                                  CommandHandler::doTurn(_commands);
                              } catch (std::invalid_argument &e) {
