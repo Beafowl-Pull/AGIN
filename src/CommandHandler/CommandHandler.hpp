@@ -5,9 +5,9 @@
 #ifndef AGIN_COMMANDHANDLER_HPP
 #define AGIN_COMMANDHANDLER_HPP
 
+#include <functional>
 #include <string>
 #include <utility>
-#include <functional>
 #include <unordered_map>
 
 namespace pbrain {
