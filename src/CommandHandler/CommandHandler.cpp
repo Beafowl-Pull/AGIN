@@ -11,17 +11,16 @@
 #include <unordered_map>
 
 namespace pbrain {
-    CommandHandler::CommandHandler() : _commands(" ")
+    CommandHandler::CommandHandler()
+        : _commands(" ")
     {
-        _commandsMap = {
-            {"START", [this] {
-                try {
-                    CommandHandler::startGame(_commands);
-                } catch (std::invalid_argument &e) {
-                    throw pbrain::Error(e.what());
-                }
-            }}
-        };
+        _commandsMap = {{"START", [this] {
+                             try {
+                                 CommandHandler::startGame(_commands);
+                             } catch (std::invalid_argument &e) {
+                                 throw pbrain::Error(e.what());
+                             }
+                         }}};
     }
 
     void CommandHandler::checkCommand(const std::string &command)
