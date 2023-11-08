@@ -11,11 +11,11 @@
 #include <vector>
 
 namespace Main {
-    class Main
+    class MainClass
     {
         public:
-            Main() = default;
-            ~Main() = default;
+            MainClass() = default;
+            ~MainClass() = default;
 
             int operator()();
 

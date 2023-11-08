@@ -6,8 +6,7 @@
 
 int main(void)
 {
-    Main::Main main;
+    Main::MainClass main;
 
-    int retValue = main();
-    return retValue;
+    return main();
 }

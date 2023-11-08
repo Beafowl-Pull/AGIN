@@ -10,12 +10,12 @@
 #include "Error.hpp"
 
 namespace Main {
-    int Main::operator()()
+    int MainClass::operator()()
     {
         return (runApp());
     }
 
-    int Main::runApp()
+    int MainClass::runApp()
     {
         std::string command;
         while (std::getline(std::cin, command)) {
