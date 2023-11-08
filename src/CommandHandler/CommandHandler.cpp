@@ -2,25 +2,26 @@
 // Created by beafowl on 07/11/23.
 //
 
+#include "CommandHandler.hpp"
 #include <functional>
 #include <iostream>
-#include "CommandHandler.hpp"
+#include "Error.hpp"
+#include "Values.hpp"
 #include <type_traits>
 #include <unordered_map>
-#include "Values.hpp"
-#include "Error.hpp"
 
 namespace pbrain {
     void commandHandler::checkCommand(const std::string &command)
     {
         std::unordered_map<std::string, std::function<void()>> commands = {
-            {"START", [command] {
-                try {
-                    commandHandler::startGame(command);
-                } catch (std::invalid_argument &e) {
-                    std::cout << "ERROR" << std::endl;
-                }
-            }},
+            {"START",
+             [command] {
+                 try {
+                     commandHandler::startGame(command);
+                 } catch (std::invalid_argument &e) {
+                     std::cout << "ERROR" << std::endl;
+                 }
+             }},
         };
 
         std::string parsedCommand = command.substr(0, command.find(' '));
@@ -28,8 +29,7 @@ namespace pbrain {
         if (commands.find(parsedCommand) != commands.end()) {
             try {
                 commands[parsedCommand]();
-            }
-            catch (pbrain::Error &e) {
+            } catch (pbrain::Error &e) {
                 std::cout << "ERROR" << std::endl;
             }
         } else {
