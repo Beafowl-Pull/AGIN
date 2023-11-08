@@ -6,6 +6,7 @@ add_executable(agin)
 
 target_sources(agin PRIVATE
         main.cpp
+        Main.cpp
 )
 
 target_link_libraries(agin

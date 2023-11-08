@@ -2,9 +2,11 @@
 // Created by beafowl on 07/11/23.
 //
 
-#include <iostream>
+#include "Main.hpp"
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+int main(int ac, const char *av[]) {
+    Main::Main main;
+
+    int retValue = main();
+    return retValue;
 }
