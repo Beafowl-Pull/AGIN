@@ -5,6 +5,7 @@
 #include <functional>
 #include <iostream>
 #include <string>
+#include <tuple>
 #include <utility>
 #include "CommandHandler.hpp"
 #include "Error.hpp"
@@ -121,9 +122,15 @@ namespace pbrain {
             if (board == "DONE") {
                 break;
             }
-            //take x, y and player
-//            std::cout << x << " " << y << " " << player << std::endl;
-            _boardResult.push_back(board);
+            int x = std::stoi(board.substr(board.find(' ') + 1, board.find(',') - board.find(' ') - 1));
+            int y = std::stoi(board.substr(board.find(',') + 1));
+            int player = std::stoi(board.substr(board.find_last_of(',') + 1));
+            if (x < 0 || x > BOARD_SIZE_MAX || y < 0 || y > BOARD_SIZE_MAX || player < 0 || player > 3) {
+                throw std::invalid_argument("Invalid coordinates");
+                break;
+            }
+            auto tuple = std::make_tuple(x, y, player);
+            _boardResult.push_back(tuple);
         }
     }
 } // namespace pbrain
