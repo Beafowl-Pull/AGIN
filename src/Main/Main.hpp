@@ -15,12 +15,21 @@ namespace Main {
     {
         public:
             MainClass() = default;
+
             ~MainClass() = default;
+
+            MainClass(const MainClass &copy) = default;
+
+            MainClass &operator=(const MainClass &other) = default;
+
+            MainClass(MainClass &&) noexcept = default;
+
+            MainClass &operator=(MainClass &&) noexcept = default;
 
             int operator()();
 
         protected:
         private:
-            int runApp();
+            static int runApp();
     };
 } // namespace Main

@@ -2,9 +2,11 @@
 // Created by beafowl on 07/11/23.
 //
 
-#include "CommandHandler.hpp"
 #include <functional>
 #include <iostream>
+#include <string>
+#include <utility>
+#include "CommandHandler.hpp"
 #include "Error.hpp"
 #include "Values.hpp"
 #include <type_traits>
@@ -30,9 +32,17 @@ namespace pbrain {
                                  throw pbrain::Error(e.what());
                              }
                          }},
-                        {"BEGIN", [this] {
+                        {"BEGIN",
+                         [this] {
                              try {
                                  CommandHandler::doBegin();
+                             } catch (std::invalid_argument &e) {
+                                 throw pbrain::Error(e.what());
+                             }
+                         }},
+                        {"BOARD", [this] {
+                             try {
+                                 CommandHandler::doBoard();
                              } catch (std::invalid_argument &e) {
                                  throw pbrain::Error(e.what());
                              }
@@ -89,5 +99,22 @@ namespace pbrain {
             return;
         }
         std::cout << "BEGIN" << std::endl;
+    }
+
+    void CommandHandler::doBoard()
+    {
+        std::string board;
+        if (!_gameStarted) {
+            throw std::invalid_argument("Game not started or a turn has not been played");
+            return;
+        }
+        while (std::getline(std::cin, board)) {
+            if (board == "DONE") {
+                break;
+            }
+            //take x, y and player
+//            std::cout << x << " " << y << " " << player << std::endl;
+            _boardResult.push_back(board);
+        }
     }
 } // namespace pbrain

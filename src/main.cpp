@@ -4,7 +4,7 @@
 
 #include "Main.hpp"
 
-int main(void)
+int main()
 {
     Main::MainClass main;
 
