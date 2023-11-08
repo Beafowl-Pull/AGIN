@@ -9,18 +9,18 @@
 #include <utility>
 
 namespace pbrain {
-    class commandHandler
+    class CommandHandler
     {
         public:
-            static commandHandler &getInstance()
+            static CommandHandler &getInstance()
             {
-                static commandHandler instance;
+                static CommandHandler instance;
                 return instance;
             }
 
-            commandHandler() = default;
+            CommandHandler() = default;
 
-            ~commandHandler() = default;
+            ~CommandHandler() = default;
 
             static void checkCommand(const std::string &command);
 

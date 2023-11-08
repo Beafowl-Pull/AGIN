@@ -13,7 +13,7 @@ int main()
         if (s == "END") {
             break;
         }
-        pbrain::commandHandler::getInstance().checkCommand(s);
+        pbrain::CommandHandler::getInstance().checkCommand(s);
     }
     return 0;
 }
