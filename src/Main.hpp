@@ -21,7 +21,5 @@ namespace Main {
         protected:
         private:
             int runApp();
-
-            int _retValue;
     };
 }

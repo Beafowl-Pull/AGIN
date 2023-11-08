@@ -4,7 +4,8 @@
 
 #include "Main.hpp"
 
-int main(void) {
+int main(void)
+{
     Main::Main main;
 
     int retValue = main();

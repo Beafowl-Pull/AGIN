@@ -6,16 +6,28 @@
 */
 
 #include "Main.hpp"
+#include "CommandHandler.hpp"
+#include "Error.hpp"
 
 namespace Main {
     int Main::operator()()
     {
-        _retValue = runApp();
-        return (_retValue);
+        return (runApp());
     }
 
     int Main::runApp()
     {
-        return (0);
+        std::string command;
+        while (std::getline(std::cin, command)) {
+            if (command == "END") {
+                return (EXIT_SUCCESS);
+            }
+            try {
+                pbrain::CommandHandler::getInstance().checkCommand(command);
+            } catch (pbrain::Error &e) {
+                return (EXIT_FAILURE);
+            }
+        }
+        return (EXIT_SUCCESS);
     }
 }
