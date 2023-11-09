@@ -2,16 +2,17 @@
 // Created by beafowl on 07/11/23.
 //
 
-#include "CommandHandler.hpp"
 #include <functional>
 #include <iostream>
 #include <string>
 #include <tuple>
 #include <utility>
+#include "CommandHandler.hpp"
 #include "Error.hpp"
 #include "Values.hpp"
 #include <type_traits>
 #include <unordered_map>
+#include "InfoClass.hpp"
 
 namespace pbrain {
     CommandHandler::CommandHandler()
@@ -41,12 +42,24 @@ namespace pbrain {
                                  throw pbrain::Error(e.what());
                              }
                          }},
-                        {"BOARD", [this] {
+                        {"BOARD",
+                         [this] {
                              try {
                                  CommandHandler::doBoard();
                              } catch (std::invalid_argument &e) {
                                  throw pbrain::Error(e.what());
                              }
+                         }},
+                        {"ABOUT",
+                         [this] {
+                             std::cout << R"(name="Agin", version="1.0", author="Beafowl & Kitetsuk")" << std::endl;
+                         }},
+                        {"INFO", [this] {
+                            try {
+                                CommandHandler::doInfo(_commands);
+                            } catch (std::invalid_argument &e) {
+                                throw pbrain::Error(e.what());
+                            }
                          }}};
     }
 
@@ -62,7 +75,7 @@ namespace pbrain {
                 std::cerr << "ERROR " << e.what() << std::endl;
             }
         } else {
-            std::cerr << "ERROR Command not found" << std::endl;
+            std::cerr << "ERROR" << command << "not found" << std::endl;
         }
     }
 
@@ -93,7 +106,7 @@ namespace pbrain {
         if (!_turnStarted) {
             _turnStarted = true;
         }
-        if (command.find(' ') == std::string::npos || command.find(",") == std::string::npos) {
+        if (command.find(' ') == std::string::npos || command.find(',') == std::string::npos) {
             throw std::invalid_argument("Invalid coordinates");
             return;
         }
@@ -132,5 +145,18 @@ namespace pbrain {
             auto tuple = std::make_tuple(x, y, player);
             _boardResult.push_back(tuple);
         }
+    }
+
+    void CommandHandler::doInfo(const std::string &command)
+    {
+        Info info = {};
+        if (command.find(' ') == std::string::npos || command.find_last_of(' ') == std::string::npos) {
+            throw std::invalid_argument("Invalid info");
+            return;
+        }
+        std::string infoName = command.substr(command.find(' ') + 1, command.find_last_of(' ') - command.find(' ') - 1);
+        std::string infoValue = command.substr(command.find_last_of(' ') + 1);
+
+        InfoHandler::getInstance().setInfo(infoName, infoValue);
     }
 } // namespace pbrain

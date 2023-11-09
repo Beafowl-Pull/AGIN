@@ -10,6 +10,7 @@
 #include <utility>
 #include <vector>
 #include <unordered_map>
+#include "InfoClass.hpp"
 
 namespace pbrain {
     class CommandHandler
@@ -38,6 +39,8 @@ namespace pbrain {
             void doBegin() const;
 
             void doBoard();
+
+            static void doInfo(const std::string &command);
 
         private:
             CommandHandler();
