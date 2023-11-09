@@ -5,6 +5,9 @@
 #include "CommandHandler.hpp"
 #include <functional>
 #include <iostream>
+#include <string>
+#include <tuple>
+#include <utility>
 #include "Error.hpp"
 #include "Values.hpp"
 #include <type_traits>
@@ -30,9 +33,17 @@ namespace pbrain {
                                  throw pbrain::Error(e.what());
                              }
                          }},
-                        {"BEGIN", [this] {
+                        {"BEGIN",
+                         [this] {
                              try {
                                  CommandHandler::doBegin();
+                             } catch (std::invalid_argument &e) {
+                                 throw pbrain::Error(e.what());
+                             }
+                         }},
+                        {"BOARD", [this] {
+                             try {
+                                 CommandHandler::doBoard();
                              } catch (std::invalid_argument &e) {
                                  throw pbrain::Error(e.what());
                              }
@@ -98,5 +109,28 @@ namespace pbrain {
             return;
         }
         std::cout << "BEGIN" << std::endl;
+    }
+
+    void CommandHandler::doBoard()
+    {
+        std::string board;
+        if (!_gameStarted) {
+            throw std::invalid_argument("Game not started or a turn has not been played");
+            return;
+        }
+        while (std::getline(std::cin, board)) {
+            if (board == "DONE") {
+                break;
+            }
+            int x = std::stoi(board.substr(board.find(' ') + 1, board.find(',') - board.find(' ') - 1));
+            int y = std::stoi(board.substr(board.find(',') + 1));
+            int player = std::stoi(board.substr(board.find_last_of(',') + 1));
+            if (x < 0 || x > BOARD_SIZE_MAX || y < 0 || y > BOARD_SIZE_MAX || player < 0 || player > 3) {
+                throw std::invalid_argument("Invalid coordinates");
+                break;
+            }
+            auto tuple = std::make_tuple(x, y, player);
+            _boardResult.push_back(tuple);
+        }
     }
 } // namespace pbrain

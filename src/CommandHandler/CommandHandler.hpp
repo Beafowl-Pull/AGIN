@@ -8,6 +8,7 @@
 #include <functional>
 #include <string>
 #include <utility>
+#include <vector>
 #include <unordered_map>
 
 namespace pbrain {
@@ -36,6 +37,8 @@ namespace pbrain {
 
             void doBegin() const;
 
+            void doBoard();
+
         private:
             CommandHandler();
             ~CommandHandler() = default;
@@ -44,6 +47,7 @@ namespace pbrain {
             std::unordered_map<std::string, std::function<void()>> _commandsMap;
             std::string _parsedCommand;
             std::string _commands;
+            std::vector<std::tuple<int, int, int>> _boardResult;
     };
 } // namespace pbrain
 
