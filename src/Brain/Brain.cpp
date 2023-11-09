@@ -15,7 +15,7 @@ namespace pbrain {
             _boardSize = size;
         }
     }
-    
+
     void Brain::setBoard(const Moves &moves)
     {
         _actualBoardMoves = moves;
@@ -31,4 +31,4 @@ namespace pbrain {
         // for (auto &move : _actualBoardMoves) {
         // }
     }
-}
+} // namespace pbrain
