@@ -6,6 +6,7 @@ add_executable(agin)
 
 add_subdirectory(CommandHandler)
 add_subdirectory(Main)
+add_subdirectory(Brain)
 
 target_sources(agin PRIVATE
         main.cpp

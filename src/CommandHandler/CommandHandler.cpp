@@ -3,15 +3,10 @@
 //
 
 #include "CommandHandler.hpp"
-#include <functional>
+#include "Error.hpp"
 #include <iostream>
 #include <string>
-#include <tuple>
-#include <utility>
-#include "Error.hpp"
-#include "Values.hpp"
 #include <type_traits>
-#include <unordered_map>
 
 namespace pbrain {
     CommandHandler::CommandHandler()
