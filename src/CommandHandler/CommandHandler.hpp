@@ -5,10 +5,10 @@
 #ifndef AGIN_COMMANDHANDLER_HPP
 #define AGIN_COMMANDHANDLER_HPP
 
-#include "Values.hpp"
 #include <functional>
 #include <string>
 #include <vector>
+#include "Values.hpp"
 #include <unordered_map>
 
 namespace pbrain {

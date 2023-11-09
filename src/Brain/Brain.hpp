@@ -10,7 +10,8 @@
 #include "Values.hpp"
 
 namespace pbrain {
-    class Brain {
+    class Brain
+    {
         public:
             Brain(const Brain &other) = delete;
 
@@ -36,7 +37,6 @@ namespace pbrain {
 
         protected:
         private:
-
             Brain();
             ~Brain() = default;
 
@@ -44,4 +44,4 @@ namespace pbrain {
             Moves _actualBoardMoves;
             Moves _possibleMoves;
     };
-}
+} // namespace pbrain

@@ -9,10 +9,9 @@
 #include "Values.hpp"
 
 namespace pbrain {
-    Brain Brain::Brain() : _actualBoardMoves(), 
-    {
-
-    }
+    Brain Brain::Brain()
+        : _actualBoardMoves(),
+    {}
 
     void Brain::setBoardSize(const std::size_t &size)
     {
@@ -20,7 +19,7 @@ namespace pbrain {
             _boardSize = size;
         }
     }
-    
+
     void Brain::setBoard(const Moves &moves)
     {
         _actualBoardMoves = moves;
@@ -36,4 +35,4 @@ namespace pbrain {
         // for (auto &move : _actualBoardMoves) {
         // }
     }
-}
+} // namespace pbrain

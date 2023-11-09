@@ -3,9 +3,9 @@
 //
 
 #include "CommandHandler.hpp"
-#include "Error.hpp"
 #include <iostream>
 #include <string>
+#include "Error.hpp"
 #include <type_traits>
 
 namespace pbrain {
