@@ -2,17 +2,17 @@
 // Created by beafowl on 07/11/23.
 //
 
+#include "CommandHandler.hpp"
 #include <functional>
 #include <iostream>
 #include <string>
 #include <tuple>
 #include <utility>
-#include "CommandHandler.hpp"
 #include "Error.hpp"
+#include "InfoClass.hpp"
 #include "Values.hpp"
 #include <type_traits>
 #include <unordered_map>
-#include "InfoClass.hpp"
 
 namespace pbrain {
     CommandHandler::CommandHandler()
@@ -55,11 +55,11 @@ namespace pbrain {
                              std::cout << R"(name="Agin", version="1.0", author="Beafowl & Kitetsuk")" << std::endl;
                          }},
                         {"INFO", [this] {
-                            try {
-                                CommandHandler::doInfo(_commands);
-                            } catch (std::invalid_argument &e) {
-                                throw pbrain::Error(e.what());
-                            }
+                             try {
+                                 CommandHandler::doInfo(_commands);
+                             } catch (std::invalid_argument &e) {
+                                 throw pbrain::Error(e.what());
+                             }
                          }}};
     }
 

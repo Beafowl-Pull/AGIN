@@ -9,8 +9,8 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <unordered_map>
 #include "InfoClass.hpp"
+#include <unordered_map>
 
 namespace pbrain {
     class CommandHandler
