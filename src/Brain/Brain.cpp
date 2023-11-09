@@ -9,11 +9,6 @@
 #include "Values.hpp"
 
 namespace pbrain {
-    Brain Brain::Brain() : _actualBoardMoves(), 
-    {
-
-    }
-
     void Brain::setBoardSize(const std::size_t &size)
     {
         if (size > BOARD_SIZE_MAX || size < BOARD_SIZE_MIN) {
