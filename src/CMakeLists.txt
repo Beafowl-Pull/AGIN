@@ -12,6 +12,12 @@ target_sources(agin PRIVATE
         main.cpp
 )
 
+find_package(Boost 1.75.0 REQUIRED COMPONENTS container)
+
+if (Boost_FOUND)
+        target_link_libraries(agin PRIVATE ${Boost_LIBRARIES})
+endif()
+
 target_link_libraries(agin
     PRIVATE
     Threads::Threads

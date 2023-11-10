@@ -10,7 +10,7 @@
 
 #include <utility>
 
-constexpr int BOARD_SIZE_MAX = 100;
+constexpr int BOARD_SIZE_MAX = 20;
 constexpr int BOARD_SIZE_MIN = 5;
 constexpr int START_LENGHT = 6;
 

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include "Error.hpp"
+#include "Brain.hpp"
 #include <type_traits>
 
 namespace pbrain {
@@ -65,45 +66,45 @@ namespace pbrain {
     {
         if (command.size() < START_LENGHT) {
             throw std::invalid_argument("Invalid size");
-            return;
         }
         std::string size = command.substr(START_LENGHT);
         if (std::stoi(size) > BOARD_SIZE_MAX || std::stoi(size) < BOARD_SIZE_MIN) {
             throw std::invalid_argument("Invalid size");
-            return;
         } else {
-            std::cout << "OK" << std::endl;
+            Brain::getInstance().setBoardSize(std::stoi(size));
             _gameStarted = true;
         }
     }
 
     void CommandHandler::doTurn(const std::string &command)
     {
-        int position = 0;
-
         if (!_gameStarted) {
             throw std::invalid_argument("Game not started");
-            return;
         }
         if (!_turnStarted) {
             _turnStarted = true;
         }
         if (command.find(' ') == std::string::npos || command.find(",") == std::string::npos) {
             throw std::invalid_argument("Invalid coordinates");
-            return;
         }
-        int x = std::stoi(command.substr(command.find(' ') + 1, command.find(',') - command.find(' ') - 1));
-        int y = std::stoi(command.substr(command.find(',') + 1));
-        std::cout << x << " " << y << std::endl;
+        std::size_t x = std::stoi(command.substr(command.find(' ') + 1, command.find(',') - command.find(' ') - 1));
+        std::size_t y = std::stoi(command.substr(command.find(',') + 1));
+        if (x < 0 || x > BOARD_SIZE_MAX || y < 0 || y > BOARD_SIZE_MAX) {
+            throw std::invalid_argument("Invalid coordinates");
+        }
+        Brain::getInstance().addMove(std::make_pair(x, y), 2);
+        Brain::getInstance().calculate();
     }
 
     void CommandHandler::doBegin() const
     {
         if (!_gameStarted || _turnStarted) {
             throw std::invalid_argument("Game not started or a turn has already been played");
-            return;
         }
-        std::cout << "BEGIN" << std::endl;
+        std::size_t x = Brain::getInstance().getBoardSize() / 2;
+        std::size_t y = Brain::getInstance().getBoardSize() / 2;
+        std::cout << x << ", " << y << std::endl;
+        Brain::getInstance().addMove(std::make_pair(x, y), 1);
     }
 
     void CommandHandler::doBoard()
@@ -111,21 +112,20 @@ namespace pbrain {
         std::string board;
         if (!_gameStarted) {
             throw std::invalid_argument("Game not started or a turn has not been played");
-            return;
         }
+        Brain::getInstance().clearBoard();
         while (std::getline(std::cin, board)) {
             if (board == "DONE") {
                 break;
             }
-            int x = std::stoi(board.substr(board.find(' ') + 1, board.find(',') - board.find(' ') - 1));
-            int y = std::stoi(board.substr(board.find(',') + 1));
-            int player = std::stoi(board.substr(board.find_last_of(',') + 1));
-            if (x < 0 || x > BOARD_SIZE_MAX || y < 0 || y > BOARD_SIZE_MAX || player < 0 || player > 3) {
-                throw std::invalid_argument("Invalid coordinates");
-                break;
+            std::size_t x = std::stoi(board.substr(board.find(' ') + 1, board.find(',') - board.find(' ') - 1));
+            std::size_t y = std::stoi(board.substr(board.find(',') + 1));
+            std::size_t player = std::stoi(board.substr(board.find_last_of(',') + 1));
+            if (x < 0 || x > BOARD_SIZE_MAX || y < 0 || y > BOARD_SIZE_MAX || player <= 0 || player > 3) {
+                throw std::invalid_argument("Invalid coordinates or player number.");
             }
-            auto tuple = std::make_tuple(x, y, player);
-            _boardResult.push_back(tuple);
+            Brain::getInstance().addMove(std::make_pair(x, y), player);
         }
+        Brain::getInstance().calculate();
     }
 } // namespace pbrain

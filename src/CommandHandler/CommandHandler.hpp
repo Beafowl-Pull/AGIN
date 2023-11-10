@@ -47,7 +47,6 @@ namespace pbrain {
             std::unordered_map<std::string, std::function<void()>> _commandsMap;
             std::string _parsedCommand;
             std::string _commands;
-            std::vector<std::tuple<int, int, int>> _boardResult;
     };
 } // namespace pbrain
 

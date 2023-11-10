@@ -8,20 +8,12 @@
 #pragma once
 
 #include "Values.hpp"
-#include <unordered_map>
+#include <boost/container/flat_map.hpp>
 
-struct pair_hash
-{
-        template<class T1, class T2>
-        std::size_t operator()(const std::pair<T1, T2> &pair) const
-        {
-            auto hash1 = std::hash<T1> {}(pair.first);
-            auto hash2 = std::hash<T2> {}(pair.second);
-            return hash1 ^ hash2; // XOR or other combination
-        }
-};
 
-using Moves = std::unordered_map<std::pair<int, int>, int, pair_hash>;
+using MovePos = std::pair<std::size_t, std::size_t>;
+
+using Moves = boost::container::flat_map<MovePos, std::size_t>;
 
 namespace pbrain {
     class Brain
@@ -43,19 +35,23 @@ namespace pbrain {
 
             void setBoardSize(const std::size_t &size);
 
+            const std::size_t &getBoardSize();
+
             void setBoard(const Moves &moves);
 
-            void addMove(const std::pair<std::size_t, std::size_t> &pos, const std::size_t &state);
+            void addMove(const MovePos &pos, const std::size_t &state);
 
             void calculate();
 
-        protected:
+            void clearBoard();
+
+            void initBoard();
+
         private:
             Brain();
             ~Brain() = default;
 
             std::size_t _boardSize;
             Moves _actualBoardMoves;
-            Moves _possibleMoves;
     };
 } // namespace pbrain
