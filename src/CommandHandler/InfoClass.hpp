@@ -40,13 +40,12 @@ namespace pbrain {
                 return instance;
             }
 
-            //NOLINTNEXTLINE
+            // NOLINTNEXTLINE
             void setInfo(const std::string &info, const std::string &value)
             {
                 if (info == "timeout_turn") {
                     _info.timeoutTurn = std::stoi(value);
-                }
-                else if (info == "timeout_match") {
+                } else if (info == "timeout_match") {
                     _info.timeoutMatch = std::stoi(value);
                 }
                 else if (info == "max_memory") {
@@ -54,17 +53,13 @@ namespace pbrain {
                 }
                 else if (info == "time_left") {
                     _info.timeLeft = std::stoi(value);
-                }
-                else if (info == "game_type") {
+                } else if (info == "game_type") {
                     _info.gameType = std::stoi(value);
-                }
-                else if (info == "rule") {
+                } else if (info == "rule") {
                     _info.rule = std::stoi(value);
-                }
-                else if (info == "evaluate") {
+                } else if (info == "evaluate") {
                     _info.evaluate = std::stoi(value);
-                }
-                else if (info == "folder") {
+                } else if (info == "folder") {
                     _info.folder = std::stoi(value);
                 }
             }
