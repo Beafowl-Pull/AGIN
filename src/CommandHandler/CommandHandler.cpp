@@ -116,12 +116,10 @@ namespace pbrain {
     {
         if (command.size() < START_LENGHT) {
             throw std::invalid_argument("Invalid size");
-            return;
         }
-        std::string size = command.substr(START_LENGHT);
+        std::string size = command.substr(command.find(' ') + 1);
         if (std::stoi(size) > BOARD_SIZE_MAX || std::stoi(size) < BOARD_SIZE_MIN) {
             throw std::invalid_argument("Invalid size");
-            return;
         } else {
             std::cout << "OK" << std::endl;
             _gameStarted = true;
@@ -130,18 +128,14 @@ namespace pbrain {
 
     void CommandHandler::doTurn(const std::string &command)
     {
-        int position = 0;
-
         if (!_gameStarted) {
             throw std::invalid_argument("Game not started");
-            return;
         }
         if (!_turnStarted) {
             _turnStarted = true;
         }
         if (command.find(' ') == std::string::npos || command.find(',') == std::string::npos) {
             throw std::invalid_argument("Invalid coordinates");
-            return;
         }
         int x = std::stoi(command.substr(command.find(' ') + 1, command.find(',') - command.find(' ') - 1));
         int y = std::stoi(command.substr(command.find(',') + 1));
@@ -152,7 +146,6 @@ namespace pbrain {
     {
         if (!_gameStarted || _turnStarted) {
             throw std::invalid_argument("Game not started or a turn has already been played");
-            return;
         }
         std::cout << "BEGIN" << std::endl;
     }
@@ -162,7 +155,6 @@ namespace pbrain {
         std::string board;
         if (!_gameStarted) {
             throw std::invalid_argument("Game not started");
-            return;
         }
         while (std::getline(std::cin, board)) {
             if (board == "DONE") {
@@ -173,7 +165,6 @@ namespace pbrain {
             int player = std::stoi(board.substr(board.find_last_of(',') + 1));
             if (x < 0 || x > BOARD_SIZE_MAX || y < 0 || y > BOARD_SIZE_MAX || player < 0 || player > 3) {
                 throw std::invalid_argument("Invalid coordinates");
-                break;
             }
             auto tuple = std::make_tuple(x, y, player);
             _boardResult.push_back(tuple);
@@ -185,7 +176,6 @@ namespace pbrain {
         Info info = {};
         if (command.find(' ') == std::string::npos || command.find_last_of(' ') == std::string::npos) {
             throw std::invalid_argument("Invalid info");
-            return;
         }
         std::string infoName = command.substr(command.find(' ') + 1, command.find_last_of(' ') - command.find(' ') - 1);
         std::string infoValue = command.substr(command.find_last_of(' ') + 1);
@@ -201,7 +191,6 @@ namespace pbrain {
         if (std::stoi(x) > BOARD_SIZE_MAX || std::stoi(x) < BOARD_SIZE_MIN || std::stoi(y) > BOARD_SIZE_MAX
             || std::stoi(y) < BOARD_SIZE_MIN) {
             throw std::invalid_argument("Invalid size");
-            return;
         } else {
             std::cout << "OK" << std::endl;
             _gameStarted = true;
@@ -219,11 +208,9 @@ namespace pbrain {
     {
         if (!_gameStarted) {
             throw std::invalid_argument("Game not started");
-            return;
         }
         if (_boardResult.empty()) {
             throw std::invalid_argument("No moves to take back");
-            return;
         }
         _boardResult.pop_back();
     }
