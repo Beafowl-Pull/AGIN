@@ -47,11 +47,9 @@ namespace pbrain {
                     _info.timeoutTurn = std::stoi(value);
                 } else if (info == "timeout_match") {
                     _info.timeoutMatch = std::stoi(value);
-                }
-                else if (info == "max_memory") {
+                } else if (info == "max_memory") {
                     _info.maxMemory = std::stoi(value);
-                }
-                else if (info == "time_left") {
+                } else if (info == "time_left") {
                     _info.timeLeft = std::stoi(value);
                 } else if (info == "game_type") {
                     _info.gameType = std::stoi(value);
