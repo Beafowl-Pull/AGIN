@@ -13,14 +13,14 @@
 namespace pbrain {
     struct Info
     {
-            unsigned int timeoutTurn;
-            unsigned int timeoutMatch;
-            unsigned int maxmemory;
-            unsigned int timeLeft;
-            unsigned int gameType;
-            unsigned int rule;
-            unsigned int evaluate;
-            unsigned int folder;
+            std::size_t timeoutTurn;
+            std::size_t timeoutMatch;
+            std::size_t maxmemory;
+            std::size_t timeLeft;
+            std::size_t gameType;
+            std::size_t rule;
+            std::size_t evaluate;
+            std::size_t folder;
     };
 
     class InfoHandler
