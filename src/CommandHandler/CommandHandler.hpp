@@ -9,6 +9,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include "InfoClass.hpp"
 #include <unordered_map>
 
 namespace pbrain {
@@ -38,6 +39,8 @@ namespace pbrain {
             void doBegin() const;
 
             void doBoard();
+
+            static void doInfo(const std::string &command);
 
         private:
             CommandHandler();
