@@ -9,58 +9,91 @@
 #include <utility>
 #include "CommandHandler.hpp"
 #include "Error.hpp"
+#include "InfoClass.hpp"
 #include "Values.hpp"
 #include <type_traits>
 #include <unordered_map>
-#include "InfoClass.hpp"
 
 namespace pbrain {
     CommandHandler::CommandHandler()
         : _commands(" ")
     {
-        _commandsMap = {{"START",
-                         [this] {
-                             try {
-                                 CommandHandler::startGame(_commands);
-                             } catch (std::invalid_argument &e) {
-                                 throw pbrain::Error(e.what());
-                             }
-                         }},
-                        {"TURN",
-                         [this] {
-                             try {
-                                 CommandHandler::doTurn(_commands);
-                             } catch (std::invalid_argument &e) {
-                                 throw pbrain::Error(e.what());
-                             }
-                         }},
-                        {"BEGIN",
-                         [this] {
-                             try {
-                                 CommandHandler::doBegin();
-                             } catch (std::invalid_argument &e) {
-                                 throw pbrain::Error(e.what());
-                             }
-                         }},
-                        {"BOARD",
-                         [this] {
-                             try {
-                                 CommandHandler::doBoard();
-                             } catch (std::invalid_argument &e) {
-                                 throw pbrain::Error(e.what());
-                             }
-                         }},
-                        {"ABOUT",
-                         [this] {
-                             std::cout << R"(name="Agin", version="1.0", author="Beafowl & Kitetsuk")" << std::endl;
-                         }},
-                        {"INFO", [this] {
-                            try {
-                                CommandHandler::doInfo(_commands);
-                            } catch (std::invalid_argument &e) {
-                                throw pbrain::Error(e.what());
-                            }
-                         }}};
+        _commandsMap = {
+            {"START",
+             [this] {
+                 try {
+                     CommandHandler::startGame(_commands);
+                 } catch (std::invalid_argument &e) {
+                     throw pbrain::Error(e.what());
+                 }
+             }},
+            {"TURN",
+             [this] {
+                 try {
+                     CommandHandler::doTurn(_commands);
+                 } catch (std::invalid_argument &e) {
+                     throw pbrain::Error(e.what());
+                 }
+             }},
+            {"BEGIN",
+             [this] {
+                 try {
+                     CommandHandler::doBegin();
+                 } catch (std::invalid_argument &e) {
+                     throw pbrain::Error(e.what());
+                 }
+             }},
+            {"BOARD",
+             [this] {
+                 try {
+                     CommandHandler::doBoard();
+                 } catch (std::invalid_argument &e) {
+                     throw pbrain::Error(e.what());
+                 }
+             }},
+            {"ABOUT",
+             [this] {
+                 std::cout << R"(name="Agin", version="1.0", author="Beafowl & Kitetsuk")" << std::endl;
+             }},
+            {"INFO",
+             [this] {
+                 try {
+                     CommandHandler::doInfo(_commands);
+                 } catch (std::invalid_argument &e) {
+                     throw pbrain::Error(e.what());
+                 }
+             }},
+            {"RECTSTART",
+             [this] {
+                 try {
+                     CommandHandler::doRectStart(_commands);
+                 } catch (std::invalid_argument &e) {
+                     throw pbrain::Error(e.what());
+                 }
+             }},
+            {"RESTART",
+             [this] {
+                 try {
+                     CommandHandler::doRestart();
+                 } catch (std::invalid_argument &e) {
+                     throw pbrain::Error(e.what());
+                 }
+             }},
+             {"TAKEBACK", [this] {
+                    try {
+                        CommandHandler::doTakeBack();
+                    } catch (std::invalid_argument &e) {
+                        throw pbrain::Error(e.what());
+                    }
+             }},
+             {"PLAY", [this] {
+                    try {
+                        CommandHandler::doTurn(_commands);
+                    } catch (std::invalid_argument &e) {
+                        throw pbrain::Error(e.what());
+                    }
+             }}
+        };
     }
 
     void CommandHandler::checkCommand(const std::string &command)
@@ -75,7 +108,7 @@ namespace pbrain {
                 std::cerr << "ERROR " << e.what() << std::endl;
             }
         } else {
-            std::cerr << "ERROR" << command << "not found" << std::endl;
+            std::cerr << "ERROR " << command << " not found" << std::endl;
         }
     }
 
@@ -128,7 +161,7 @@ namespace pbrain {
     {
         std::string board;
         if (!_gameStarted) {
-            throw std::invalid_argument("Game not started or a turn has not been played");
+            throw std::invalid_argument("Game not started");
             return;
         }
         while (std::getline(std::cin, board)) {
@@ -159,4 +192,41 @@ namespace pbrain {
 
         InfoHandler::getInstance().setInfo(infoName, infoValue);
     }
+
+    void CommandHandler::doRectStart(const std::string &command)
+    {
+        std::string x = command.substr(command.find(' ') + 1, command.find(',') - command.find(' ') - 1);
+        std::string y = command.substr(command.find(',') + 1);
+
+        if (std::stoi(x) > BOARD_SIZE_MAX || std::stoi(x) < BOARD_SIZE_MIN || std::stoi(y) > BOARD_SIZE_MAX
+            || std::stoi(y) < BOARD_SIZE_MIN) {
+            throw std::invalid_argument("Invalid size");
+            return;
+        } else {
+            std::cout << "OK" << std::endl;
+            _gameStarted = true;
+        }
+    }
+    
+    void CommandHandler::doRestart()
+    {
+        _gameStarted = false;
+        _turnStarted = false;
+        _boardResult.clear();
+    }
+
+    void CommandHandler::doTakeBack()
+    {
+        if (!_gameStarted) {
+            throw std::invalid_argument("Game not started");
+            return;
+        }
+        if (_boardResult.empty()) {
+            throw std::invalid_argument("No moves to take back");
+            return;
+        }
+        _boardResult.pop_back();
+    }
+
+    
 } // namespace pbrain
