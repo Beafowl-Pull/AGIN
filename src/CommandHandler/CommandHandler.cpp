@@ -5,8 +5,8 @@
 #include "CommandHandler.hpp"
 #include <iostream>
 #include <string>
-#include "Error.hpp"
 #include "Brain.hpp"
+#include "Error.hpp"
 #include <type_traits>
 
 namespace pbrain {

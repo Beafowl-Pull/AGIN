@@ -6,15 +6,14 @@
 */
 
 #include "Brain.hpp"
-#include "Values.hpp"
-#include <vector>
 #include <iostream>
+#include <vector>
+#include "Values.hpp"
 
 namespace pbrain {
     Brain::Brain()
         : _boardSize(0)
-    {
-    }
+    {}
 
     void Brain::setBoardSize(const std::size_t &size)
     {

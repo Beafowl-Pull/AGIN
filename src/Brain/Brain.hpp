@@ -10,7 +10,6 @@
 #include "Values.hpp"
 #include <boost/container/flat_map.hpp>
 
-
 using MovePos = std::pair<std::size_t, std::size_t>;
 
 using Moves = boost::container::flat_map<MovePos, std::size_t>;
