@@ -15,7 +15,7 @@ namespace pbrain {
     {
             std::size_t timeoutTurn;
             std::size_t timeoutMatch;
-            std::size_t maxmemory;
+            std::size_t maxMemory;
             std::size_t timeLeft;
             std::size_t gameType;
             std::size_t rule;
@@ -26,17 +26,13 @@ namespace pbrain {
     class InfoHandler
     {
         public:
-            InfoHandler() = default;
+            InfoHandler(const InfoHandler &infoHandler) = delete;
 
-            ~InfoHandler() = default;
+            InfoHandler &operator=(const InfoHandler &infoHandler) = delete;
 
-            InfoHandler(const InfoHandler &infoHandler) = default;
+            InfoHandler(InfoHandler &&infoHandler) = delete;
 
-            InfoHandler &operator=(const InfoHandler &infoHandler) = default;
-
-            InfoHandler(InfoHandler &&infoHandler) = default;
-
-            InfoHandler &operator=(InfoHandler &&infoHandler) = default;
+            InfoHandler &operator=(InfoHandler &&infoHandler) = delete;
 
             static InfoHandler &getInstance()
             {
@@ -52,7 +48,7 @@ namespace pbrain {
                 } else if (info == "timeout_match") {
                     _info.timeoutMatch = std::stoi(value);
                 } else if (info == "max_memory") {
-                    _info.maxmemory = std::stoi(value);
+                    _info.maxMemory = std::stoi(value);
                 } else if (info == "time_left") {
                     _info.timeLeft = std::stoi(value);
                 } else if (info == "game_type") {
@@ -72,6 +68,10 @@ namespace pbrain {
             }
 
         private:
+            InfoHandler() = default;
+
+            ~InfoHandler() = default;
+
             Info _info;
     };
 } // namespace pbrain

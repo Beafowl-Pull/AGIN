@@ -85,7 +85,7 @@ namespace pbrain {
             throw std::invalid_argument("Invalid size");
             return;
         }
-        std::string size = command.substr(START_LENGHT);
+        std::string size = command.substr(command.find(' ') + 1);
         if (std::stoi(size) > BOARD_SIZE_MAX || std::stoi(size) < BOARD_SIZE_MIN) {
             throw std::invalid_argument("Invalid size");
             return;
