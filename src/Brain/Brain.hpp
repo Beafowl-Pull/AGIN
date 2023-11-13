@@ -11,35 +11,37 @@
 #include "Values.hpp"
 #include <boost/container/flat_map.hpp>
 
+struct Position
+{
+        int _x;
+        int _y;
 
-struct Position {
-    int _x;
-    int _y;
+        Position(int x, int y)
+        {
+            _x = x;
+            _y = y;
+        }
 
-    Position(int x, int y)
-    {
-        _x = x;
-        _y = y;
-    }
-
-    bool operator==(const Position &pos)
-    {
-        return (pos._x == _x && pos._y == _y);
-    }
+        bool operator==(const Position &pos)
+        {
+            return (pos._x == _x && pos._y == _y);
+        }
 };
 
 using Moves = std::vector<Position>;
 
-enum Direction {
+enum Direction
+{
     VERTICAL,
     HORIZONTAL,
     DIAG_LEFT,
     DIAG_RIGHT
 };
 
-struct Neighboor {
-    Moves neighboorMoves;
-    Direction dir;
+struct Neighboor
+{
+        Moves neighboorMoves;
+        Direction dir;
 };
 
 namespace pbrain {

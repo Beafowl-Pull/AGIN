@@ -6,8 +6,8 @@
 #include <iostream>
 #include <string>
 #include "Brain.hpp"
-#include "Values.hpp"
 #include "Error.hpp"
+#include "Values.hpp"
 #include <type_traits>
 
 namespace pbrain {
