@@ -7,42 +7,9 @@
 
 #pragma once
 
-#include <vector>
-#include "Values.hpp"
 #include <boost/container/flat_map.hpp>
-
-struct Position
-{
-        int _x;
-        int _y;
-
-        Position(int x, int y)
-        {
-            _x = x;
-            _y = y;
-        }
-
-        bool operator==(const Position &pos)
-        {
-            return (pos._x == _x && pos._y == _y);
-        }
-};
-
-using Moves = std::vector<Position>;
-
-enum Direction
-{
-    VERTICAL,
-    HORIZONTAL,
-    DIAG_LEFT,
-    DIAG_RIGHT
-};
-
-struct Neighboor
-{
-        Moves neighboorMoves;
-        Direction dir;
-};
+#include "Neighbor.hpp"
+#include "BrainValues.hpp"
 
 namespace pbrain {
     class Brain
@@ -70,14 +37,19 @@ namespace pbrain {
 
             void calculate();
 
+
             void clearBoard();
 
         private:
+            void checkNeighbor(const Position &pos, const Position &posNeighbor1, const Position &posNeighbor2, Direction dir, bool ally = false);
+
+            void addNeighbor(const Position &pos, std::vector<Neighbor>::iterator fstIterator, std::vector<Neighbor>::iterator scdIterator, Direction dir, bool ally = false);
+
             Brain();
             ~Brain() = default;
 
             std::size_t _boardSize;
-            std::vector<Neighboor> _allies;
-            std::vector<Neighboor> _enemies;
+            std::vector<Neighbor> _allies;
+            std::vector<Neighbor> _enemies;
     };
 } // namespace pbrain
