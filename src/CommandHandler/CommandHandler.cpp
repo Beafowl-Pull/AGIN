@@ -7,6 +7,7 @@
 #include <string>
 #include "Error.hpp"
 #include "Brain.hpp"
+#include "Values.hpp"
 #include <type_traits>
 
 namespace pbrain {
@@ -92,7 +93,8 @@ namespace pbrain {
         if (x < 0 || x > BOARD_SIZE_MAX || y < 0 || y > BOARD_SIZE_MAX) {
             throw std::invalid_argument("Invalid coordinates");
         }
-        Brain::getInstance().addMove(std::make_pair(x, y), 2);
+        Position pos(x, y);
+        Brain::getInstance().addMove(pos, ENEMY);
         Brain::getInstance().calculate();
     }
 
@@ -104,7 +106,8 @@ namespace pbrain {
         std::size_t x = Brain::getInstance().getBoardSize() / 2;
         std::size_t y = Brain::getInstance().getBoardSize() / 2;
         std::cout << x << ", " << y << std::endl;
-        Brain::getInstance().addMove(std::make_pair(x, y), 1);
+        Position pos(x, y);
+        Brain::getInstance().addMove(pos, 1);
     }
 
     void CommandHandler::doBoard()
@@ -124,7 +127,8 @@ namespace pbrain {
             if (x < 0 || x > BOARD_SIZE_MAX || y < 0 || y > BOARD_SIZE_MAX || player <= 0 || player > 3) {
                 throw std::invalid_argument("Invalid coordinates or player number.");
             }
-            Brain::getInstance().addMove(std::make_pair(x, y), player);
+            Position pos(x, y);
+            Brain::getInstance().addMove(pos, player);
         }
         Brain::getInstance().calculate();
     }

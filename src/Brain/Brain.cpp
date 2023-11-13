@@ -28,22 +28,21 @@ namespace pbrain {
         return (_boardSize);
     }
 
-    void Brain::setBoard(const Moves &moves)
+    void Brain::addMove(const Position &pos, const std::size_t &state)
     {
-        _actualBoardMoves = moves;
-    }
+        // if (state == ALLY) {
+        //     for (auto &neighboorMoves : _allies) {
+        //         // Do things to check the neighboor
+        //     }
 
-    void Brain::addMove(const MovePos &pos, const std::size_t &state)
-    {
-        if (_actualBoardMoves.find(pos) != _actualBoardMoves.end()) {
-            return;
-        }
-        _actualBoardMoves[pos] = state;
+        //     return;
+        // }
+        // _actualBoardMoves[pos] = state;
     }
 
     void Brain::clearBoard()
     {
-        _actualBoardMoves.clear();
+        // _actualBoardMoves.clear();
     }
 
     void Brain::calculate()

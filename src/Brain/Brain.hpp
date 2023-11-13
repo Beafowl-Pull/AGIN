@@ -7,13 +7,40 @@
 
 #pragma once
 
+#include <vector>
 #include "Values.hpp"
 #include <boost/container/flat_map.hpp>
 
 
-using MovePos = std::pair<std::size_t, std::size_t>;
+struct Position {
+    int _x;
+    int _y;
 
-using Moves = boost::container::flat_map<MovePos, std::size_t>;
+    Position(int x, int y)
+    {
+        _x = x;
+        _y = y;
+    }
+
+    bool operator==(const Position &pos)
+    {
+        return (pos._x == _x && pos._y == _y);
+    }
+};
+
+using Moves = std::vector<Position>;
+
+enum Direction {
+    VERTICAL,
+    HORIZONTAL,
+    DIAG_LEFT,
+    DIAG_RIGHT
+};
+
+struct Neighboor {
+    Moves neighboorMoves;
+    Direction dir;
+};
 
 namespace pbrain {
     class Brain
@@ -37,21 +64,18 @@ namespace pbrain {
 
             const std::size_t &getBoardSize();
 
-            void setBoard(const Moves &moves);
-
-            void addMove(const MovePos &pos, const std::size_t &state);
+            void addMove(const Position &pos, const std::size_t &state);
 
             void calculate();
 
             void clearBoard();
-
-            void initBoard();
 
         private:
             Brain();
             ~Brain() = default;
 
             std::size_t _boardSize;
-            Moves _actualBoardMoves;
+            std::vector<Neighboor> _allies;
+            std::vector<Neighboor> _enemies;
     };
 } // namespace pbrain

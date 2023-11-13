@@ -10,6 +10,8 @@
 
 #include <utility>
 
+#define ALLY 1
+#define ENEMY 2
 constexpr int BOARD_SIZE_MAX = 20;
 constexpr int BOARD_SIZE_MIN = 5;
 constexpr int START_LENGHT = 6;
