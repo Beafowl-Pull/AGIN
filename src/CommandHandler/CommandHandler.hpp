@@ -42,6 +42,12 @@ namespace pbrain {
 
             static void doInfo(const std::string &command);
 
+            void doRectStart(const std::string &command);
+
+            void doRestart();
+
+            void doTakeBack();
+
         private:
             CommandHandler();
             ~CommandHandler() = default;
