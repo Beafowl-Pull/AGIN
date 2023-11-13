@@ -77,6 +77,13 @@ namespace pbrain {
         for (std::size_t i = 0; i < DIRECTION_MAX; i++) {
             checkNeighbor(pos, pos + neighborPos[i].first, pos + neighborPos[i].second, static_cast<Direction>(i), state == ALLY);
         }
+        for (auto nei : _enemies) {
+            std::cout << "--- Neigbour team ---" << std::endl;
+            for (auto &pos : nei.neighborMoves) {
+                std::cout << "Position : " << pos._x << ", " << pos._y << std::endl;
+                std::cout << "Direction : " << nei.dir << std::endl;
+            }
+        }
     }
 
     void Brain::clearBoard()
