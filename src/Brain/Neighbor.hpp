@@ -21,4 +21,4 @@ namespace pbrain {
             Neighbor &operator+(Neighbor &neighbor);
             Neighbor &operator+(Position pos);
     };
-}
+} // namespace pbrain

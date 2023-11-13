@@ -5,9 +5,9 @@
 ** Brain
 */
 
+#include "Brain.hpp"
 #include <iostream>
 #include <vector>
-#include "Brain.hpp"
 #include "Values.hpp"
 
 namespace pbrain {
@@ -27,7 +27,8 @@ namespace pbrain {
         return (_boardSize);
     }
 
-    void Brain::addNeighbor(const Position &pos, std::vector<Neighbor>::iterator fstIterator, std::vector<Neighbor>::iterator scdIterator, Direction dir, bool ally)
+    void Brain::addNeighbor(const Position &pos, std::vector<Neighbor>::iterator fstIterator,
+                            std::vector<Neighbor>::iterator scdIterator, Direction dir, bool ally)
     {
         if (fstIterator != _allies.end() && scdIterator == _allies.end()) {
             *fstIterator + pos;
@@ -44,7 +45,8 @@ namespace pbrain {
         }
     }
 
-    void Brain::checkNeighbor(const Position &pos, const Position &posNeighbor1, const Position &posNeighbor2, Direction dir, bool ally)
+    void Brain::checkNeighbor(const Position &pos, const Position &posNeighbor1, const Position &posNeighbor2,
+                              Direction dir, bool ally)
     {
         std::vector<Neighbor>::iterator fstNeighborhood = _allies.end();
         std::vector<Neighbor>::iterator scdNeighborhood = _allies.end();
@@ -67,15 +69,14 @@ namespace pbrain {
 
     void Brain::addMove(const Position &pos, const std::size_t &state)
     {
-        std::vector<std::pair<Position, Position>> neighborPos = {
-            {{0, 1}, {0, -1}},
-            {{1, 0}, {-1, 0}},
-            {{-1, -1}, {1, 1}},
-            {{1, -1}, {-1, 1}}
-        };
+        std::vector<std::pair<Position, Position>> neighborPos = {{{0, 1}, {0, -1}},
+                                                                  {{1, 0}, {-1, 0}},
+                                                                  {{-1, -1}, {1, 1}},
+                                                                  {{1, -1}, {-1, 1}}};
 
         for (std::size_t i = 0; i < DIRECTION_MAX; i++) {
-            checkNeighbor(pos, pos + neighborPos[i].first, pos + neighborPos[i].second, static_cast<Direction>(i), state == ALLY);
+            checkNeighbor(pos, pos + neighborPos[i].first, pos + neighborPos[i].second, static_cast<Direction>(i),
+                          state == ALLY);
         }
     }
 

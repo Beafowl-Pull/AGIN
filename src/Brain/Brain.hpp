@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <boost/container/flat_map.hpp>
-#include "Neighbor.hpp"
 #include "BrainValues.hpp"
+#include "Neighbor.hpp"
+#include <boost/container/flat_map.hpp>
 
 namespace pbrain {
     class Brain
@@ -37,13 +37,14 @@ namespace pbrain {
 
             void calculate();
 
-
             void clearBoard();
 
         private:
-            void checkNeighbor(const Position &pos, const Position &posNeighbor1, const Position &posNeighbor2, Direction dir, bool ally = false);
+            void checkNeighbor(const Position &pos, const Position &posNeighbor1, const Position &posNeighbor2,
+                               Direction dir, bool ally = false);
 
-            void addNeighbor(const Position &pos, std::vector<Neighbor>::iterator fstIterator, std::vector<Neighbor>::iterator scdIterator, Direction dir, bool ally = false);
+            void addNeighbor(const Position &pos, std::vector<Neighbor>::iterator fstIterator,
+                             std::vector<Neighbor>::iterator scdIterator, Direction dir, bool ally = false);
 
             Brain();
             ~Brain() = default;
