@@ -8,9 +8,9 @@
 #include "Neighbor.hpp"
 
 namespace pbrain {
-    Neighbor::Neighbor(Direction dir_) : dir(dir)
-    {
-    }
+    Neighbor::Neighbor(Direction dir_)
+        : dir(dir)
+    {}
 
     bool Neighbor::exist(Position pos)
     {
@@ -35,4 +35,4 @@ namespace pbrain {
         neighborMoves.push_back(pos);
         return *this;
     }
-}
+} // namespace pbrain
