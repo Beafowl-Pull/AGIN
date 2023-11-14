@@ -8,7 +8,7 @@
 # -----------------------------------------------------------
 # Target
 
-NAME = pbrain_agin
+NAME = pbrain-agin
 
 #------------------------------------------------------------
 # COLOUR
@@ -23,7 +23,6 @@ RESET = '\033[0m'
 #------------------------------------------------------------
 # IN-MAKEFILE
 
-BINARY_PATH 	:=	$(shell stack path --local-install-root)
 CURR_RULE = all
 CC := g++
 RM = rm -rf
@@ -35,7 +34,7 @@ $(NAME): CURR_RULE = $(NAME)
 $(NAME): init
 	cmake -S . -B build
 	cmake --build build -j 10
-	cp ./build/bin/pbrain_agin ./$(NAME)
+	cp ./build/bin/$(NAME) ./$(NAME)
 
 #------------------------------------------------------------
 # Clean
