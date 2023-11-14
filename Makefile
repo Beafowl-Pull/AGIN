@@ -35,6 +35,7 @@ $(NAME): init
 	cmake -S . -B build
 	cmake --build build -j 10
 	cp ./build/bin/$(NAME) ./$(NAME)
+	mv ./$(NAME) ./pbrain-gomoku-ai
 
 #------------------------------------------------------------
 # Clean
@@ -51,7 +52,7 @@ clean: init
 .PHONY: fclean
 fclean: CURR_RULE = fclean
 fclean: init clean
-	$(RM) $(NAME)
+	$(RM) ./pbrain-gomoku-ai
 	@echo -e $(GREEN)'-> [finished]: $(NAME): $(CURR_RULE)'$(RESET)
 
 #------------------------------------------------------------
