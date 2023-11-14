@@ -6,13 +6,12 @@
 */
 
 #include "Main.hpp"
-#include "CommandHandler.hpp"
-#include "Error.hpp"
-
 #include <bitset>
-#include <vector>
 #include <ctime>
 #include <iostream>
+#include <vector>
+#include "CommandHandler.hpp"
+#include "Error.hpp"
 
 namespace Main {
     int MainClass::operator()()
@@ -20,7 +19,8 @@ namespace Main {
         return (runApp());
     }
 
-    enum Tristate {
+    enum Tristate
+    {
         empty,
         ally,
         enemy
