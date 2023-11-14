@@ -12,11 +12,12 @@
 #include <ctime>
 #include <iostream>
 #include <vector>
->>>>>>> 32b55ab45706ea5fdda498543099a99de045835d
+    >>>>>>> 32b55ab45706ea5fdda498543099a99de045835d
 #include "CommandHandler.hpp"
 #include "Error.hpp"
 
-namespace Main {
+    namespace Main
+{
     int MainClass::operator()()
     {
         return (runApp());

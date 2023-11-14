@@ -61,7 +61,8 @@ enum Direction
     DIRECTION_MAX
 };
 
-enum Cell {
+enum Cell
+{
     EMPTY = 0,
     ALLY,
     ENEMY

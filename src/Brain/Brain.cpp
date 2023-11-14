@@ -10,8 +10,8 @@
 #include <string>
 #include <vector>
 #include "BrainValues.hpp"
-#include "Values.hpp"
 #include "Error.hpp"
+#include "Values.hpp"
 
 namespace pbrain {
     Brain::Brain()

@@ -39,7 +39,6 @@ namespace pbrain {
             void clearBoard();
 
         private:
-
             Brain();
             ~Brain() = default;
 
