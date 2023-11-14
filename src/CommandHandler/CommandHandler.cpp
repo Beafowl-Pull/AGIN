@@ -225,8 +225,9 @@ namespace pbrain {
         if (_boardResult.empty()) {
             throw std::invalid_argument("No moves to take back");
         }
-        Brain::getInstance().removeMove({std::get<0>(_boardResult.back()), std::get<1>(_boardResult.back())}, std::get<2>(_boardResult.back()));
+        Brain::getInstance().removeMove({std::get<0>(_boardResult.back()), std::get<1>(_boardResult.back())},
+                                        std::get<2>(_boardResult.back()));
         _boardResult.pop_back();
-    }   
+    }
 
 } // namespace pbrain

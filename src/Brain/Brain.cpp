@@ -28,8 +28,7 @@ namespace pbrain {
     }
 
     void Brain::removeMove(const Position &pos, const std::size_t &state)
-    {
-    }
+    {}
 
     void Brain::addNeighbor(const Position &pos, std::vector<Neighbor>::iterator fstIterator,
                             std::vector<Neighbor>::iterator scdIterator, Direction dir, bool ally)
@@ -91,7 +90,5 @@ namespace pbrain {
     }
 
     void Brain::calculate()
-    {
-        
-    }
+    {}
 } // namespace pbrain

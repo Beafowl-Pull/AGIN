@@ -8,8 +8,8 @@
 #include <functional>
 #include <string>
 #include <vector>
-#include "Values.hpp"
 #include "InfoClass.hpp"
+#include "Values.hpp"
 #include <unordered_map>
 
 namespace pbrain {
