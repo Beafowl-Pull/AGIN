@@ -39,11 +39,18 @@ namespace pbrain {
             void clearBoard();
 
         private:
+
+            int checkAlignement(const Position &pos, const Position &axis, const std::size_t &depth);
+
+            int checkEmptySpace(const Position &pos, const Position &axis);
+
+            bool checkPosOutBoard(const Position &pos);
+
             Brain();
             ~Brain() = default;
 
             std::size_t _boardSize;
             std::vector<std::vector<Cell>> _board;
-            Position lastMove;
+            Position _lastMove;
     };
 } // namespace pbrain

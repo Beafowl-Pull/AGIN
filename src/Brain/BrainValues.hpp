@@ -48,18 +48,16 @@ struct Position
             this->_y -= pos._y;
             return *this;
         }
+
+        Position &operator*=(const Position &pos)
+        {
+            this->_x *= pos._x;
+            this->_y *= pos._y;
+            return *this;
+        }
 };
 
 using Moves = std::vector<Position>;
-
-enum Direction
-{
-    VERTICAL = 0,
-    HORIZONTAL,
-    DIAG_LEFT,
-    DIAG_RIGHT,
-    DIRECTION_MAX
-};
 
 enum Cell
 {

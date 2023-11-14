@@ -35,10 +35,11 @@ namespace pbrain {
 
     void Brain::addMove(const Position &pos, const Cell &state)
     {
-        if (pos._x < 0 || pos._x >= _boardSize || pos._y < 0 || pos._y >= _boardSize) {
+        if (checkPosOutBoard(pos)) {
             throw Error("Pos out of range : " + std::to_string(pos._x) + " " + std::to_string(pos._y));
         }
         _board[pos._y][pos._x] = state;
+        _lastMove = pos;
     }
 
     void Brain::clearBoard()
@@ -52,11 +53,35 @@ namespace pbrain {
 
     void Brain::calculate()
     {
-        std::cout << "Calculation" << std::endl;
+        std::vector<Position> neighborPos = {{0, 1}, {1, 0}, {-1, -1}, {1, -1}};
+        int fstSide = 0;
+        int sndSide = 0;
+
+        for (auto axis : neighborPos) {
+            fstSide = checkAlignement(_lastMove, axis, 0);
+            axis *= -1;
+            scdSide = checkAlignement(_lastMove, axis, 0);
+        }
+    }
+
+    int Brain::checkAlignement(const Position &pos, const Position &axis, const std::size_t &depth)
+    {
+        Position posCopy = pos;
+        pos += axis;
+        if (checkPosOutBoard(pos) || _board[pos._y][pos._x] != _board[posCopy._y][posCopy._x]) {
+            return depth;
+        }
+        return checkAlignement(pos, axis, depth + 1);
+    }
+
+    int brain::checkEmptySpace(const Position &pos, const Position &axis)
+    {
+        _lastMove += (axis * (neighbors + 1));
+
+    }
+
+    bool Brain::checkPosOutBoard(const Position &pos)
+    {
+        return (pos._x < 0 || pos._x >= _boardSize || pos._y < 0 || pos._y >= _boardSize);
     }
 } // namespace pbrain
-
-// std::vector<std::pair<Position, Position>> neighborPos = {{{0, 1}, {0, -1}},
-//                                                                   {{1, 0}, {-1, 0}},
-//                                                                   {{-1, -1}, {1, 1}},
-//                                                                   {{1, -1}, {-1, 1}}};
