@@ -9,7 +9,7 @@
 
 namespace pbrain {
     Neighbor::Neighbor(Direction dir_)
-        : dir(dir)
+        : dir(dir_)
     {}
 
     bool Neighbor::exist(Position pos)
