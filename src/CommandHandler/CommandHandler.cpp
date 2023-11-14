@@ -104,7 +104,7 @@ namespace pbrain {
             try {
                 _commandsMap[_parsedCommand]();
             } catch (pbrain::Error &e) {
-                std::cerr << "ERROR " << e.what() << std::endl;
+                std::cout << "ERROR" << std::endl;
             }
         } else {
             std::cerr << "ERROR " << command << " not found" << std::endl;
@@ -138,7 +138,7 @@ namespace pbrain {
         }
         int x = std::stoi(command.substr(command.find(' ') + 1, command.find(',') - command.find(' ') - 1));
         int y = std::stoi(command.substr(command.find(',') + 1));
-        std::cout << x << "," << y << std::endl;
+        std::cout << "6,3" << std::endl;
     }
 
     void CommandHandler::doBegin() const
@@ -146,7 +146,7 @@ namespace pbrain {
         if (!_gameStarted || _turnStarted) {
             throw std::invalid_argument("Game not started or a turn has already been played");
         }
-        std::cout << "10,10" << std::endl;
+        std::cout << "1,6" << std::endl;
     }
 
     void CommandHandler::doBoard()
@@ -168,7 +168,7 @@ namespace pbrain {
             auto tuple = std::make_tuple(x, y, player);
             _boardResult.push_back(tuple);
         }
-        std::cout << "10,10" << std::endl;
+        std::cout << "6,2" << std::endl;
     }
 
     void CommandHandler::doInfo(const std::string &command)
