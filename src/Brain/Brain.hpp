@@ -39,9 +39,11 @@ namespace pbrain {
             void clearBoard();
 
         private:
-            int checkAlignement(const Position &pos, const Position &axis, const std::size_t &depth);
+            std::size_t checkAlignement(const Position &pos, const Axis &axis, const std::size_t &depth);
 
-            int checkEmptySpace(const Position &pos, const Position &axis);
+            std::size_t checkEmptySpace(const Position &pos, const Axis &axis, const std::size_t &depth);
+
+            AxisDatas getAxisDatas(const Position &axis);
 
             bool checkPosOutBoard(const Position &pos);
 

@@ -37,9 +37,9 @@ namespace pbrain {
     void Brain::addMove(const Position &pos, const Cell &state)
     {
         if (checkPosOutBoard(pos)) {
-            throw Error("Pos out of range : " + std::to_string(pos._x) + " " + std::to_string(pos._y));
+            throw Error("Pos out of range : " + std::to_string(pos.x) + " " + std::to_string(pos.y));
         }
-        _board[pos._y][pos._x] = state;
+        _board[pos.y][pos.x] = state;
         _lastMove = pos;
     }
 
@@ -55,35 +55,50 @@ namespace pbrain {
     void Brain::calculate()
     {
         std::vector<Position> neighborPos = {{0, 1}, {1, 0}, {-1, -1}, {1, -1}};
-        int fstSide = 0;
-        int sndSide = 0;
+        std::vector<std::pair<AxisDatas, AxisDatas>> axisDatas;
 
         for (auto axis : neighborPos) {
-            fstSide = checkAlignement(_lastMove, axis, 0);
-            // axis *= -1;
-            sndSide = checkAlignement(_lastMove, axis, 0);
+            std::pair<AxisDatas, AxisDatas> axisPair{getAxisDatas(axis), getAxisDatas(axis * -1)};
+            axisDatas.push_back(axisPair);
+            //checkWin
+            //return
         }
     }
 
-    int Brain::checkAlignement(const Position &pos, const Position &axis, const std::size_t &depth)
+    std::size_t Brain::checkAlignement(const Position &pos, const Position &axis, const std::size_t &depth)
     {
-        Position posCopy = pos;
-
-        posCopy += axis;
-        if (checkPosOutBoard(pos) || checkPosOutBoard(posCopy)
-            || _board[pos._y][pos._x] != _board[posCopy._y][posCopy._x]) {
+        if (checkPosOutBoard(pos)
+            || _board[_lastMove.y][_lastMove.x] != _board[pos.y][pos.x]) {
             return depth;
         }
-        return checkAlignement(pos, axis, depth + 1);
+        return checkAlignement(pos + axis, axis, depth + 1);
     }
 
-    int Brain::checkEmptySpace(const Position &pos, const Position &axis)
+    std::size_t Brain::checkEmptySpace(const Position &pos, const Axis &axis, const std::size_t &depth)
     {
-        // _lastMove += (axis * (neighbors + 1));
+        if (_board[pos.y][pos.x] != Cell::EMPTY) {
+            return depth;
+        }
+        return checkEmptySpace(pos + axis, axis, depth + 1);
+    }
+
+    AxisDatas Brain::getAxisDatas(const Axis &axis)
+    {
+        AxisDatas datas;
+        Cell lastMoveCell = board[_lastMove.y][_lastMove.x]:
+
+        datas.axis = axis;
+        datas.align = checkAlignement(_lastMove + axis, axis, 0);
+        datas.emptyCells = checkEmptySpace(_lastMove + (axis * (datas.align + 1)), axis, 0);
+
+        if (datas.emptyCells > 0) {
+            auto blockCellPos = _lastMove + (axis * (datas.align + 1 + datas.emptyCells));
+            datas.afterSpaceAlign = checkAlignement(blockCellPos, axis, 0);
+        }
     }
 
     bool Brain::checkPosOutBoard(const Position &pos)
     {
-        return (pos._x < 0 || pos._x >= _boardSize || pos._y < 0 || pos._y >= _boardSize);
+        return (static_cast<int>(pos.x) < 0 || pos.x >= _boardSize || static_cast<int>(pos.y) < 0 || pos.y >= _boardSize);
     }
 } // namespace pbrain
