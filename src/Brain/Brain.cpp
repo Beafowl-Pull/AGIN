@@ -15,7 +15,7 @@
 
 namespace pbrain {
     Brain::Brain()
-        : _boardSize(0)
+        : _boardSize(0), _lastMove({0, 0})
     {}
 
     void Brain::setBoardSize(const std::size_t &size)
@@ -59,24 +59,25 @@ namespace pbrain {
 
         for (auto axis : neighborPos) {
             fstSide = checkAlignement(_lastMove, axis, 0);
-            axis *= -1;
-            scdSide = checkAlignement(_lastMove, axis, 0);
+            // axis *= -1;
+            sndSide = checkAlignement(_lastMove, axis, 0);
         }
     }
 
     int Brain::checkAlignement(const Position &pos, const Position &axis, const std::size_t &depth)
     {
         Position posCopy = pos;
-        pos += axis;
-        if (checkPosOutBoard(pos) || _board[pos._y][pos._x] != _board[posCopy._y][posCopy._x]) {
+
+        posCopy += axis;
+        if (checkPosOutBoard(pos) || checkPosOutBoard(posCopy) || _board[pos._y][pos._x] != _board[posCopy._y][posCopy._x]) {
             return depth;
         }
         return checkAlignement(pos, axis, depth + 1);
     }
 
-    int brain::checkEmptySpace(const Position &pos, const Position &axis)
+    int Brain::checkEmptySpace(const Position &pos, const Position &axis)
     {
-        _lastMove += (axis * (neighbors + 1));
+        // _lastMove += (axis * (neighbors + 1));
     }
 
     bool Brain::checkPosOutBoard(const Position &pos)

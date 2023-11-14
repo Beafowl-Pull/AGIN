@@ -49,7 +49,7 @@ namespace pbrain {
             ~Brain() = default;
 
             std::size_t _boardSize;
-            std::vector<std::vector<Cell>> _board;
             Position _lastMove;
+            std::vector<std::vector<Cell>> _board;
     };
 } // namespace pbrain

@@ -63,5 +63,6 @@ enum Cell
 {
     EMPTY = 0,
     ALLY,
-    ENEMY
+    ENEMY,
+    RENJU
 };

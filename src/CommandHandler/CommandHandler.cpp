@@ -107,7 +107,7 @@ namespace pbrain {
         std::size_t y = Brain::getInstance().getBoardSize() / 2;
         std::cout << x << ", " << y << std::endl;
         Position pos(x, y);
-        Brain::getInstance().addMove(pos, 1);
+        Brain::getInstance().addMove(pos, Cell::ALLY);
     }
 
     void CommandHandler::doBoard()
@@ -127,8 +127,9 @@ namespace pbrain {
             if (x < 0 || x > BOARD_SIZE_MAX || y < 0 || y > BOARD_SIZE_MAX || player <= 0 || player > 3) {
                 throw std::invalid_argument("Invalid coordinates or player number.");
             }
+            
             Position pos(x, y);
-            Brain::getInstance().addMove(pos, player);
+            Brain::getInstance().addMove(pos, static_cast<Cell>(player));
         }
         Brain::getInstance().calculate();
     }
