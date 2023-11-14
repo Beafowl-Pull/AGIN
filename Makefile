@@ -34,6 +34,7 @@ CP = cp
 $(NAME): CURR_RULE = $(NAME)
 $(NAME): init
 	cmake -S . -B build
+	cmake --build build -j 10
 	cp ./build/bin/pbrain_agin ./$(NAME)
 
 #------------------------------------------------------------
