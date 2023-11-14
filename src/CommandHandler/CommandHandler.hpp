@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include "Values.hpp"
+#include "InfoClass.hpp"
 #include <unordered_map>
 
 namespace pbrain {
@@ -35,9 +36,17 @@ namespace pbrain {
 
             void doTurn(const std::string &command);
 
-            void doBegin() const;
+            void doBegin();
 
             void doBoard();
+
+            static void doInfo(const std::string &command);
+
+            void doRectStart(const std::string &command);
+
+            void doRestart();
+
+            void doTakeBack();
 
         private:
             CommandHandler();
@@ -47,6 +56,7 @@ namespace pbrain {
             std::unordered_map<std::string, std::function<void()>> _commandsMap;
             std::string _parsedCommand;
             std::string _commands;
+            std::vector<std::tuple<int, int, int>> _boardResult;
     };
 } // namespace pbrain
 

@@ -39,6 +39,8 @@ namespace pbrain {
 
             void clearBoard();
 
+            void removeMove(const Position &pos, const std::size_t &state);
+
         private:
             void checkNeighbor(const Position &pos, const Position &posNeighbor1, const Position &posNeighbor2,
                                Direction dir, bool ally = false);

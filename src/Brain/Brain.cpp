@@ -27,6 +27,10 @@ namespace pbrain {
         return (_boardSize);
     }
 
+    void Brain::removeMove(const Position &pos, const std::size_t &state)
+    {
+    }
+
     void Brain::addNeighbor(const Position &pos, std::vector<Neighbor>::iterator fstIterator,
                             std::vector<Neighbor>::iterator scdIterator, Direction dir, bool ally)
     {
@@ -78,13 +82,6 @@ namespace pbrain {
             checkNeighbor(pos, pos + neighborPos[i].first, pos + neighborPos[i].second, static_cast<Direction>(i),
                           state == ALLY);
         }
-        for (auto nei : _enemies) {
-            std::cout << "--- Neigbour team ---" << std::endl;
-            for (auto &pos : nei.neighborMoves) {
-                std::cout << "Position : " << pos._x << ", " << pos._y << std::endl;
-                std::cout << "Direction : " << nei.dir << std::endl;
-            }
-        }
     }
 
     void Brain::clearBoard()
@@ -95,6 +92,6 @@ namespace pbrain {
 
     void Brain::calculate()
     {
-        std::cout << "Calculation" << std::endl;
+        
     }
 } // namespace pbrain

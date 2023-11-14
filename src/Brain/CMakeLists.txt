@@ -1,8 +1,8 @@
 find_package(Threads REQUIRED)
 
-target_sources(agin PRIVATE
+target_sources(pbrain_agin PRIVATE
         Brain.cpp
         Neighbor.cpp
 )
 
-target_include_directories(agin PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(pbrain_agin PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
