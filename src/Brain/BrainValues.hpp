@@ -9,9 +9,6 @@
 
 #include <vector>
 
-#define ALLY  1
-#define ENEMY 2
-
 struct Position
 {
         int _x;
@@ -62,4 +59,10 @@ enum Direction
     DIAG_LEFT,
     DIAG_RIGHT,
     DIRECTION_MAX
+};
+
+enum Cell {
+    EMPTY = 0,
+    ALLY,
+    ENEMY
 };
