@@ -58,17 +58,16 @@ namespace pbrain {
         std::vector<std::pair<AxisDatas, AxisDatas>> axisDatas;
 
         for (auto axis : neighborPos) {
-            std::pair<AxisDatas, AxisDatas> axisPair{getAxisDatas(axis), getAxisDatas(axis * -1)};
+            std::pair<AxisDatas, AxisDatas> axisPair {getAxisDatas(axis), getAxisDatas(axis * -1)};
             axisDatas.push_back(axisPair);
-            //checkWin
-            //return
+            // checkWin
+            // return
         }
     }
 
     std::size_t Brain::checkAlignement(const Position &pos, const Position &axis, const std::size_t &depth)
     {
-        if (checkPosOutBoard(pos)
-            || _board[_lastMove.y][_lastMove.x] != _board[pos.y][pos.x]) {
+        if (checkPosOutBoard(pos) || _board[_lastMove.y][_lastMove.x] != _board[pos.y][pos.x]) {
             return depth;
         }
         return checkAlignement(pos + axis, axis, depth + 1);
@@ -85,9 +84,9 @@ namespace pbrain {
     AxisDatas Brain::getAxisDatas(const Axis &axis)
     {
         AxisDatas datas;
-        Cell lastMoveCell = board[_lastMove.y][_lastMove.x]:
+        Cell lastMoveCell = board[_lastMove.y][_lastMove.x] :
 
-        datas.axis = axis;
+            datas.axis = axis;
         datas.align = checkAlignement(_lastMove + axis, axis, 0);
         datas.emptyCells = checkEmptySpace(_lastMove + (axis * (datas.align + 1)), axis, 0);
 
@@ -99,6 +98,7 @@ namespace pbrain {
 
     bool Brain::checkPosOutBoard(const Position &pos)
     {
-        return (static_cast<int>(pos.x) < 0 || pos.x >= _boardSize || static_cast<int>(pos.y) < 0 || pos.y >= _boardSize);
+        return (static_cast<int>(pos.x) < 0 || pos.x >= _boardSize || static_cast<int>(pos.y) < 0
+                || pos.y >= _boardSize);
     }
 } // namespace pbrain

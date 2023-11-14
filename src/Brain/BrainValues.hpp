@@ -55,27 +55,33 @@ struct Position
             this->y *= pos.y;
             return *this;
         }
-
 };
 
-struct Axis {
-    int x;
-    int y;
+struct Axis
+{
+        int x;
+        int y;
 
-    Axis &operator*(int factor)
-    {
-        return {this->x * factor, this->y * factor};
-    }
+        Axis &operator*(int factor)
+        {
+            return {this->x * factor, this->y * factor};
+        }
 };
 
 struct AxisDatas
 {
-    AxisDatas::AxisDatas() : axis({0, 0}), align(0), emptyCells(0), blockCell(EMPTY), afterSpaceAlign(0) {}
-    Axis axis;
-    std::size_t align;
-    std::size_t emptyCells;
-    Cell blockCell;
-    std::size_t afterSpaceAlign;
+        AxisDatas::AxisDatas()
+            : axis({0, 0}),
+              align(0),
+              emptyCells(0),
+              blockCell(EMPTY),
+              afterSpaceAlign(0)
+        {}
+        Axis axis;
+        std::size_t align;
+        std::size_t emptyCells;
+        Cell blockCell;
+        std::size_t afterSpaceAlign;
 };
 
 using Moves = std::vector<Position>;
