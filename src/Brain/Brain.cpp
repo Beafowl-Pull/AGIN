@@ -77,7 +77,6 @@ namespace pbrain {
     int brain::checkEmptySpace(const Position &pos, const Position &axis)
     {
         _lastMove += (axis * (neighbors + 1));
-
     }
 
     bool Brain::checkPosOutBoard(const Position &pos)
