@@ -9,8 +9,7 @@
 #include "CommandHandler.hpp"
 #include "Error.hpp"
 
-    namespace Main
-{
+namespace Main {
     int MainClass::operator()()
     {
         return (runApp());

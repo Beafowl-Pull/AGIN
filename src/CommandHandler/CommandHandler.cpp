@@ -127,7 +127,7 @@ namespace pbrain {
             if (x < 0 || x > BOARD_SIZE_MAX || y < 0 || y > BOARD_SIZE_MAX || player <= 0 || player > 3) {
                 throw std::invalid_argument("Invalid coordinates or player number.");
             }
-            
+
             Position pos(x, y);
             Brain::getInstance().addMove(pos, static_cast<Cell>(player));
         }

@@ -15,7 +15,8 @@
 
 namespace pbrain {
     Brain::Brain()
-        : _boardSize(0), _lastMove({0, 0})
+        : _boardSize(0),
+          _lastMove({0, 0})
     {}
 
     void Brain::setBoardSize(const std::size_t &size)
@@ -69,7 +70,8 @@ namespace pbrain {
         Position posCopy = pos;
 
         posCopy += axis;
-        if (checkPosOutBoard(pos) || checkPosOutBoard(posCopy) || _board[pos._y][pos._x] != _board[posCopy._y][posCopy._x]) {
+        if (checkPosOutBoard(pos) || checkPosOutBoard(posCopy)
+            || _board[pos._y][pos._x] != _board[posCopy._y][posCopy._x]) {
             return depth;
         }
         return checkAlignement(pos, axis, depth + 1);
