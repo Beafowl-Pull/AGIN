@@ -21,10 +21,11 @@ namespace pbrain {
 
     void Brain::setBoardSize(const std::size_t &size)
     {
-        _boardSize = size < BOARD_SIZE_MAX || size > BOARD_SIZE_MIN ? BOARD_SIZE_MIN : size;
+        _boardSize = size < BOARD_SIZE_MAX || size > BOARD_SIZE_MIN ? size : BOARD_SIZE_MIN;
         for (std::size_t i = 0; i < _boardSize; i++) {
+            _board.emplace_back();
             for (std::size_t j = 0; j < _boardSize; j++) {
-                _board[i][j] = Cell::EMPTY;
+                _board[i].push_back(Cell::EMPTY);
             }
         }
     }
@@ -57,15 +58,28 @@ namespace pbrain {
         std::vector<Position> neighborPos = {{0, 1}, {1, 0}, {-1, -1}, {1, -1}};
         std::vector<std::pair<AxisDatas, AxisDatas>> axisDatas;
 
-        for (auto axis : neighborPos) {
+        for (auto pos : neighborPos) {
+            Axis axis(pos.x, pos.y);
             std::pair<AxisDatas, AxisDatas> axisPair {getAxisDatas(axis), getAxisDatas(axis * -1)};
             axisDatas.push_back(axisPair);
+            std::cout << "--------------------First axis---------------------" << std::endl;
+            std::cout << "Nbr of align : " << axisPair.first.align << std::endl;
+            std::cout << "Nbr of emptyCells : " << axisPair.first.emptyCells << std::endl;
+            std::cout << "Nbr of blockCell : " << static_cast<Cell>(axisPair.first.blockCell) << std::endl;
+            std::cout << "Nbr of afterSpaceAling : " << axisPair.first.afterSpaceAlign << std::endl;
+            std::cout << "-----------------------------------------------------" << std::endl;
+            std::cout << "--------------------Second axis---------------------" << std::endl;
+            std::cout << "Nbr of align : " << axisPair.second.align << std::endl;
+            std::cout << "Nbr of emptyCells : " << axisPair.second.emptyCells << std::endl;
+            std::cout << "Nbr of blockCell : " << static_cast<Cell>(axisPair.second.blockCell) << std::endl;
+            std::cout << "Nbr of afterSpaceAling : " << axisPair.second.afterSpaceAlign << std::endl;
+            std::cout << "-----------------------------------------------------" << std::endl;
             // checkWin
             // return
         }
     }
 
-    std::size_t Brain::checkAlignement(const Position &pos, const Position &axis, const std::size_t &depth)
+    std::size_t Brain::checkAlignement(const Position &pos, const Axis &axis, const std::size_t &depth)
     {
         if (checkPosOutBoard(pos) || _board[_lastMove.y][_lastMove.x] != _board[pos.y][pos.x]) {
             return depth;
@@ -75,7 +89,7 @@ namespace pbrain {
 
     std::size_t Brain::checkEmptySpace(const Position &pos, const Axis &axis, const std::size_t &depth)
     {
-        if (_board[pos.y][pos.x] != Cell::EMPTY) {
+        if (checkPosOutBoard(pos) || _board[pos.y][pos.x] != Cell::EMPTY) {
             return depth;
         }
         return checkEmptySpace(pos + axis, axis, depth + 1);
@@ -84,16 +98,16 @@ namespace pbrain {
     AxisDatas Brain::getAxisDatas(const Axis &axis)
     {
         AxisDatas datas;
-        Cell lastMoveCell = board[_lastMove.y][_lastMove.x] :
+        Cell lastMoveCell = _board[_lastMove.y][_lastMove.x];
 
-            datas.axis = axis;
+        datas.axis = axis;
         datas.align = checkAlignement(_lastMove + axis, axis, 0);
         datas.emptyCells = checkEmptySpace(_lastMove + (axis * (datas.align + 1)), axis, 0);
-
         if (datas.emptyCells > 0) {
             auto blockCellPos = _lastMove + (axis * (datas.align + 1 + datas.emptyCells));
             datas.afterSpaceAlign = checkAlignement(blockCellPos, axis, 0);
         }
+        return datas;
     }
 
     bool Brain::checkPosOutBoard(const Position &pos)

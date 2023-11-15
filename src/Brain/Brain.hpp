@@ -43,7 +43,7 @@ namespace pbrain {
 
             std::size_t checkEmptySpace(const Position &pos, const Axis &axis, const std::size_t &depth);
 
-            AxisDatas getAxisDatas(const Position &axis);
+            AxisDatas getAxisDatas(const Axis &axis);
 
             bool checkPosOutBoard(const Position &pos);
 
