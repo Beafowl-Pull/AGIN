@@ -5,10 +5,10 @@
 ** Brain
 */
 
+#include "Brain.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Brain.hpp"
 #include "BrainValues.hpp"
 #include "Error.hpp"
 #include "Values.hpp"
@@ -68,7 +68,7 @@ namespace pbrain {
                 res = checkWin(axisPair.second, axisPair.first, total);
             }
             if (res.has_value()) {
-                //cout
+                // cout
                 return;
             }
         }
@@ -108,7 +108,7 @@ namespace pbrain {
 
     std::optional<Position> Brain::checkWin(AxisDatas fstData, AxisDatas sndData, std::size_t total)
     {
-        //prendre en compte si c enemy ou ally
+        // prendre en compte si c enemy ou ally
         if (total == 4 && fstData.emptyCells > 0) {
             return _lastMove + (fstData.axis * (1 + fstData.align));
         } else if (fstData.emptyCells == 1) {
@@ -120,7 +120,7 @@ namespace pbrain {
                 minAfterSpace++;
             }
         }
-        return  std::nullopt;
+        return std::nullopt;
     }
 
     Position Brain::calculateNextMove(std::vector<Line> lines)
