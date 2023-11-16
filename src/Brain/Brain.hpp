@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include <optional>
 #include "BrainValues.hpp"
-#include <boost/container/flat_map.hpp>
 
 namespace pbrain {
     class Brain
@@ -44,6 +44,10 @@ namespace pbrain {
             std::size_t checkEmptySpace(const Position &pos, const Axis &axis, const std::size_t &depth);
 
             AxisDatas getAxisDatas(const Axis &axis);
+
+            std::optional<Position> checkWin(AxisDatas fstData, AxisDatas sndData, std::size_t total);
+
+            Position calculateNextMove(std::vector<Line>);
 
             bool checkPosOutBoard(const Position &pos);
 

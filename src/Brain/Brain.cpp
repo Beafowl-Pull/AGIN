@@ -5,10 +5,10 @@
 ** Brain
 */
 
-#include "Brain.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Brain.hpp"
 #include "BrainValues.hpp"
 #include "Error.hpp"
 #include "Values.hpp"
@@ -55,28 +55,24 @@ namespace pbrain {
 
     void Brain::calculate()
     {
-        std::vector<Position> neighborPos = {{0, 1}, {1, 0}, {-1, -1}, {1, -1}};
-        std::vector<std::pair<AxisDatas, AxisDatas>> axisDatas;
+        std::vector<Axis> neighborAxis = {{0, 1}, {1, 0}, {-1, -1}, {1, -1}};
+        std::vector<Line> lines;
 
-        for (auto pos : neighborPos) {
+        for (auto pos : neighborAxis) {
             Axis axis(pos.x, pos.y);
             std::pair<AxisDatas, AxisDatas> axisPair {getAxisDatas(axis), getAxisDatas(axis * -1)};
-            axisDatas.push_back(axisPair);
-            std::cout << "--------------------First axis---------------------" << std::endl;
-            std::cout << "Nbr of align : " << axisPair.first.align << std::endl;
-            std::cout << "Nbr of emptyCells : " << axisPair.first.emptyCells << std::endl;
-            std::cout << "Nbr of blockCell : " << static_cast<Cell>(axisPair.first.blockCell) << std::endl;
-            std::cout << "Nbr of afterSpaceAling : " << axisPair.first.afterSpaceAlign << std::endl;
-            std::cout << "-----------------------------------------------------" << std::endl;
-            std::cout << "--------------------Second axis---------------------" << std::endl;
-            std::cout << "Nbr of align : " << axisPair.second.align << std::endl;
-            std::cout << "Nbr of emptyCells : " << axisPair.second.emptyCells << std::endl;
-            std::cout << "Nbr of blockCell : " << static_cast<Cell>(axisPair.second.blockCell) << std::endl;
-            std::cout << "Nbr of afterSpaceAling : " << axisPair.second.afterSpaceAlign << std::endl;
-            std::cout << "-----------------------------------------------------" << std::endl;
-            // checkWin
-            // return
+            auto total = axisPair.first.align + axisPair.second.align + 1;
+            lines.push_back({axisPair, total});
+            auto res = checkWin(axisPair.first, axisPair.second, total);
+            if (!res.has_value()) {
+                res = checkWin(axisPair.second, axisPair.first, total);
+            }
+            if (res.has_value()) {
+                //cout
+                return;
+            }
         }
+        calculateNextMove(lines);
     }
 
     std::size_t Brain::checkAlignement(const Position &pos, const Axis &axis, const std::size_t &depth)
@@ -108,6 +104,34 @@ namespace pbrain {
             datas.afterSpaceAlign = checkAlignement(blockCellPos, axis, 0);
         }
         return datas;
+    }
+
+    std::optional<Position> Brain::checkWin(AxisDatas fstData, AxisDatas sndData, std::size_t total)
+    {
+        //prendre en compte si c enemy ou ally
+        if (total == 4 && fstData.emptyCells > 0) {
+            return _lastMove + (fstData.axis * (1 + fstData.align));
+        } else if (fstData.emptyCells == 1) {
+            auto minAfterSpace = 0;
+            for (auto needTotal = 3; needTotal == 0; needTotal--) {
+                if (total >= needTotal && fstData.afterSpaceAlign > minAfterSpace) {
+                    return _lastMove + (fstData.axis * (1 + fstData.align));
+                }
+                minAfterSpace++;
+            }
+        }
+        return  std::nullopt;
+    }
+
+    Position Brain::calculateNextMove(std::vector<Line> lines)
+    {
+        auto &max = lines.front();
+        for (auto &line : lines) {
+            if (line.total > max.total) {
+                max = line;
+            }
+        }
+        //
     }
 
     bool Brain::checkPosOutBoard(const Position &pos)

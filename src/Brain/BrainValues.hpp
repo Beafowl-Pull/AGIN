@@ -33,10 +33,10 @@ struct Axis
 
 struct Position
 {
-        int x;
-        int y;
+        std::size_t x;
+        std::size_t y;
 
-        Position(int x_, int y_)
+        Position(std::size_t x_, std::size_t y_)
         {
             x = x_;
             y = y_;
@@ -97,14 +97,18 @@ struct AxisDatas
             : axis({0, 0}),
               align(0),
               emptyCells(0),
-              blockCell(EMPTY),
               afterSpaceAlign(0)
         {}
         Axis axis;
         std::size_t align;
         std::size_t emptyCells;
-        Cell blockCell;
         std::size_t afterSpaceAlign;
+};
+
+struct Line
+{
+        std::pair<AxisDatas, AxisDatas> line;
+        std::size_t total;
 };
 
 using Moves = std::vector<Position>;
