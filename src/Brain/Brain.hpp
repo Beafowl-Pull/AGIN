@@ -43,13 +43,15 @@ namespace pbrain {
             void setAlly(bool value);
 
         private:
-            std::size_t checkAlignement(const Position &pos, const Axis &axis, const std::size_t &depth, const Position &posToCheck);
+            std::size_t checkAlignement(const Position &pos, const Axis &axis, const std::size_t &depth,
+                                        const Position &posToCheck);
 
             std::size_t checkEmptySpace(const Position &pos, const Axis &axis, const std::size_t &depth);
 
             AxisDatas getAxisDatas(const Axis &axis, const Position &pos);
 
-            std::optional<Position> checkWin(AxisDatas fstData, AxisDatas sndData, std::size_t total, const Position &pos);
+            std::optional<Position> checkWin(AxisDatas fstData, AxisDatas sndData, std::size_t total,
+                                             const Position &pos);
 
             Position calculateNextMove(std::vector<Line>);
 

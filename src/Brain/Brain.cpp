@@ -67,9 +67,9 @@ namespace pbrain {
 
     // Ici j ai changer en optionnel pour que ce soit le command handler qui print si notre IA a renvoyé un coup
     // Comme ca on calcule d'abord le lastMove allié puis on calcule le move enemy
-    // Si on renvoit un coup pour allié pcq on est sur de gagner on print direct sans calculer pour l'enemy (pcq on a gagné :/)
-    // Si le calculate(true) n'a rien revoyé alors on le lance avec false pour calculer avec l'enemy
-    // Je t ai écrit ca pcq j ai fait des modifs dans le command handler
+    // Si on renvoit un coup pour allié pcq on est sur de gagner on print direct sans calculer pour l'enemy (pcq on a
+    // gagné :/) Si le calculate(true) n'a rien revoyé alors on le lance avec false pour calculer avec l'enemy Je t ai
+    // écrit ca pcq j ai fait des modifs dans le command handler
     std::optional<Position> Brain::calculate(bool ally)
     {
         std::vector<Axis> neighborAxis = {{0, 1}, {1, 0}, {-1, -1}, {1, -1}};
@@ -78,7 +78,9 @@ namespace pbrain {
         setAlly(ally);
         for (auto pos : neighborAxis) {
             Axis axis(pos.x, pos.y);
-            std::pair<AxisDatas, AxisDatas> axisPair {getAxisDatas(axis, _isAlly ? _lastMoveAlly : _lastMoveEnemy), getAxisDatas(axis * -1, _isAlly ? _lastMoveAlly : _lastMoveEnemy)};
+            std::pair<AxisDatas, AxisDatas> axisPair {
+                getAxisDatas(axis, _isAlly ? _lastMoveAlly : _lastMoveEnemy),
+                getAxisDatas(axis * -1, _isAlly ? _lastMoveAlly : _lastMoveEnemy)};
             auto total = axisPair.first.align + axisPair.second.align + 1;
             lines.push_back({axisPair, total});
             auto res = checkWin(axisPair.first, axisPair.second, total, _isAlly ? _lastMoveAlly : _lastMoveEnemy);
@@ -92,7 +94,8 @@ namespace pbrain {
         calculateNextMove(lines);
     }
 
-    std::size_t Brain::checkAlignement(const Position &pos, const Axis &axis, const std::size_t &depth, const Position &posToCheck)
+    std::size_t Brain::checkAlignement(const Position &pos, const Axis &axis, const std::size_t &depth,
+                                       const Position &posToCheck)
     {
         if (checkPosOutBoard(pos) || _board[posToCheck.y][posToCheck.x] != _board[pos.y][pos.x]) {
             return depth;
@@ -123,10 +126,11 @@ namespace pbrain {
         return datas;
     }
 
-    std::optional<Position> Brain::checkWin(AxisDatas fstData, AxisDatas sndData, std::size_t total, const Position& pos)
+    std::optional<Position> Brain::checkWin(AxisDatas fstData, AxisDatas sndData, std::size_t total,
+                                            const Position &pos)
     {
         // prendre en compte si c enemy ou ally
-        // pos représente le move enemy ou ally 
+        // pos représente le move enemy ou ally
         // On peut d'ailleurs savoir quelle type de move c'est en allant chercher dans le _board
         // et donc pourquoi pas appliquer un comportement bien distinct si y a besoin
         Cell teamCell = _board[pos.y][pos.x];
