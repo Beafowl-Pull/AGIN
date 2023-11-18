@@ -16,7 +16,9 @@
 namespace pbrain {
     Brain::Brain()
         : _boardSize(0),
-          _lastMove({0, 0})
+          _lastMoveAlly({0, 0}),
+          _lastMoveEnemy({0, 0}),
+          _isAlly(false)
     {}
 
     void Brain::setBoardSize(const std::size_t &size)
@@ -41,7 +43,17 @@ namespace pbrain {
             throw Error("Pos out of range : " + std::to_string(pos.x) + " " + std::to_string(pos.y));
         }
         _board[pos.y][pos.x] = state;
-        _lastMove = pos;
+        state == Cell::ENEMY ? _lastMoveEnemy : _lastMoveAlly = pos;
+    }
+
+    bool Brain::isAlly()
+    {
+        return (_isAlly);
+    }
+
+    void Brain::setAlly(bool value)
+    {
+        _isAlly = value;
     }
 
     void Brain::clearBoard()
@@ -53,34 +65,39 @@ namespace pbrain {
         }
     }
 
-    void Brain::calculate()
+    // Ici j ai changer en optionnel pour que ce soit le command handler qui print si notre IA a renvoyé un coup
+    // Comme ca on calcule d'abord le lastMove allié puis on calcule le move enemy
+    // Si on renvoit un coup pour allié pcq on est sur de gagner on print direct sans calculer pour l'enemy (pcq on a gagné :/)
+    // Si le calculate(true) n'a rien revoyé alors on le lance avec false pour calculer avec l'enemy
+    // Je t ai écrit ca pcq j ai fait des modifs dans le command handler
+    std::optional<Position> Brain::calculate(bool ally)
     {
         std::vector<Axis> neighborAxis = {{0, 1}, {1, 0}, {-1, -1}, {1, -1}};
         std::vector<Line> lines;
 
+        setAlly(ally);
         for (auto pos : neighborAxis) {
             Axis axis(pos.x, pos.y);
-            std::pair<AxisDatas, AxisDatas> axisPair {getAxisDatas(axis), getAxisDatas(axis * -1)};
+            std::pair<AxisDatas, AxisDatas> axisPair {getAxisDatas(axis, _isAlly ? _lastMoveAlly : _lastMoveEnemy), getAxisDatas(axis * -1, _isAlly ? _lastMoveAlly : _lastMoveEnemy)};
             auto total = axisPair.first.align + axisPair.second.align + 1;
             lines.push_back({axisPair, total});
-            auto res = checkWin(axisPair.first, axisPair.second, total);
+            auto res = checkWin(axisPair.first, axisPair.second, total, _isAlly ? _lastMoveAlly : _lastMoveEnemy);
             if (!res.has_value()) {
-                res = checkWin(axisPair.second, axisPair.first, total);
+                res = checkWin(axisPair.second, axisPair.first, total, _isAlly ? _lastMoveAlly : _lastMoveEnemy);
             }
             if (res.has_value()) {
-                // cout
-                return;
+                return res;
             }
         }
         calculateNextMove(lines);
     }
 
-    std::size_t Brain::checkAlignement(const Position &pos, const Axis &axis, const std::size_t &depth)
+    std::size_t Brain::checkAlignement(const Position &pos, const Axis &axis, const std::size_t &depth, const Position &posToCheck)
     {
-        if (checkPosOutBoard(pos) || _board[_lastMove.y][_lastMove.x] != _board[pos.y][pos.x]) {
+        if (checkPosOutBoard(pos) || _board[posToCheck.y][posToCheck.x] != _board[pos.y][pos.x]) {
             return depth;
         }
-        return checkAlignement(pos + axis, axis, depth + 1);
+        return checkAlignement(pos + axis, axis, depth + 1, posToCheck);
     }
 
     std::size_t Brain::checkEmptySpace(const Position &pos, const Axis &axis, const std::size_t &depth)
@@ -91,31 +108,36 @@ namespace pbrain {
         return checkEmptySpace(pos + axis, axis, depth + 1);
     }
 
-    AxisDatas Brain::getAxisDatas(const Axis &axis)
+    AxisDatas Brain::getAxisDatas(const Axis &axis, const Position &pos)
     {
         AxisDatas datas;
-        Cell lastMoveCell = _board[_lastMove.y][_lastMove.x];
+        Cell lastMoveCell = _board[pos.y][pos.x];
 
         datas.axis = axis;
-        datas.align = checkAlignement(_lastMove + axis, axis, 0);
-        datas.emptyCells = checkEmptySpace(_lastMove + (axis * (datas.align + 1)), axis, 0);
+        datas.align = checkAlignement(pos + axis, axis, 0, pos);
+        datas.emptyCells = checkEmptySpace(pos + (axis * (datas.align + 1)), axis, 0);
         if (datas.emptyCells > 0) {
-            auto blockCellPos = _lastMove + (axis * (datas.align + 1 + datas.emptyCells));
-            datas.afterSpaceAlign = checkAlignement(blockCellPos, axis, 0);
+            auto blockCellPos = pos + (axis * (datas.align + 1 + datas.emptyCells));
+            datas.afterSpaceAlign = checkAlignement(blockCellPos, axis, 0, pos);
         }
         return datas;
     }
 
-    std::optional<Position> Brain::checkWin(AxisDatas fstData, AxisDatas sndData, std::size_t total)
+    std::optional<Position> Brain::checkWin(AxisDatas fstData, AxisDatas sndData, std::size_t total, const Position& pos)
     {
         // prendre en compte si c enemy ou ally
+        // pos représente le move enemy ou ally 
+        // On peut d'ailleurs savoir quelle type de move c'est en allant chercher dans le _board
+        // et donc pourquoi pas appliquer un comportement bien distinct si y a besoin
+        Cell teamCell = _board[pos.y][pos.x];
+
         if (total == 4 && fstData.emptyCells > 0) {
-            return _lastMove + (fstData.axis * (1 + fstData.align));
+            return pos + (fstData.axis * (1 + fstData.align));
         } else if (fstData.emptyCells == 1) {
             auto minAfterSpace = 0;
             for (auto needTotal = 3; needTotal == 0; needTotal--) {
                 if (total >= needTotal && fstData.afterSpaceAlign > minAfterSpace) {
-                    return _lastMove + (fstData.axis * (1 + fstData.align));
+                    return pos + (fstData.axis * (1 + fstData.align));
                 }
                 minAfterSpace++;
             }

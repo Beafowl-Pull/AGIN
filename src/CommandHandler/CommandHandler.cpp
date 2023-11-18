@@ -95,7 +95,15 @@ namespace pbrain {
         }
         Position pos(x, y);
         Brain::getInstance().addMove(pos, ENEMY);
-        Brain::getInstance().calculate();
+        auto res = Brain::getInstance().calculate(true);
+        if (res.has_value()) {
+            std::cout << res.value().x << ", " << res.value().y << std::endl;
+            return;
+        }
+        res = Brain::getInstance().calculate(false);
+        if (res.has_value()) {
+            std::cout << res.value().x << ", " << res.value().y << std::endl;
+        }
     }
 
     void CommandHandler::doBegin() const
@@ -110,6 +118,7 @@ namespace pbrain {
         Brain::getInstance().addMove(pos, Cell::ALLY);
     }
 
+    // Ici calculate un peu spéciale (faut recalculer les coups)
     void CommandHandler::doBoard()
     {
         std::string board;
@@ -131,6 +140,6 @@ namespace pbrain {
             Position pos(x, y);
             Brain::getInstance().addMove(pos, static_cast<Cell>(player));
         }
-        Brain::getInstance().calculate();
+        // Brain::getInstance().calculate();
     }
 } // namespace pbrain
