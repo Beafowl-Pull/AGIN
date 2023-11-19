@@ -42,6 +42,8 @@ namespace pbrain {
 
             void setAlly(bool value);
 
+            Position getRandomMove();
+
         private:
             std::size_t checkAlignement(const Position &pos, const Axis &axis, const std::size_t &depth,
                                         const Position &posToCheck);
