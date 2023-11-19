@@ -8,7 +8,7 @@
 # -----------------------------------------------------------
 # Target
 
-NAME = pbrain_agin
+NAME = pbrain-agin
 
 #------------------------------------------------------------
 # COLOUR
@@ -23,7 +23,6 @@ RESET = '\033[0m'
 #------------------------------------------------------------
 # IN-MAKEFILE
 
-BINARY_PATH 	:=	$(shell stack path --local-install-root)
 CURR_RULE = all
 CC := g++
 RM = rm -rf
@@ -34,7 +33,9 @@ CP = cp
 $(NAME): CURR_RULE = $(NAME)
 $(NAME): init
 	cmake -S . -B build
-	cp ./build/bin/pbrain_agin ./$(NAME)
+	cmake --build build -j 10
+	cp ./build/bin/$(NAME) ./$(NAME)
+	mv ./$(NAME) ./pbrain-gomoku-ai
 
 #------------------------------------------------------------
 # Clean
@@ -51,7 +52,7 @@ clean: init
 .PHONY: fclean
 fclean: CURR_RULE = fclean
 fclean: init clean
-	$(RM) $(NAME)
+	$(RM) ./pbrain-gomoku-ai
 	@echo -e $(GREEN)'-> [finished]: $(NAME): $(CURR_RULE)'$(RESET)
 
 #------------------------------------------------------------

@@ -102,7 +102,7 @@ namespace pbrain {
             try {
                 _commandsMap[_parsedCommand]();
             } catch (pbrain::Error &e) {
-                std::cerr << "ERROR " << e.what() << std::endl;
+                std::cout << "ERROR" << std::endl;
             }
         } else {
             std::cerr << "ERROR " << command << " not found" << std::endl;
@@ -139,7 +139,6 @@ namespace pbrain {
         if (x < 0 || x > BOARD_SIZE_MAX || y < 0 || y > BOARD_SIZE_MAX) {
             throw std::invalid_argument("Invalid coordinates");
         }
-        _boardResult.emplace_back(x, y, ENEMY);
         Position pos(x, y);
         Brain::getInstance().addMove(pos, ENEMY);
         Brain::getInstance().calculate();
@@ -155,7 +154,6 @@ namespace pbrain {
         std::cout << x << ", " << y << std::endl;
         Position pos(x, y);
         Brain::getInstance().addMove(pos, ALLY);
-        _boardResult.emplace_back(x, y, ALLY);
     }
 
     void CommandHandler::doBoard()
@@ -165,7 +163,6 @@ namespace pbrain {
             throw std::invalid_argument("Game not started");
         }
         Brain::getInstance().clearBoard();
-        _boardResult.clear();
         while (std::getline(std::cin, board)) {
             if (board == "DONE") {
                 break;
@@ -178,7 +175,6 @@ namespace pbrain {
             }
             Position pos(x, y);
             Brain::getInstance().addMove(pos, player);
-            _boardResult.emplace_back(x, y, player);
         }
         Brain::getInstance().calculate();
     }
@@ -214,7 +210,6 @@ namespace pbrain {
         _gameStarted = false;
         _turnStarted = false;
         Brain::getInstance().clearBoard();
-        _boardResult.clear();
     }
 
     void CommandHandler::doTakeBack()
@@ -222,12 +217,6 @@ namespace pbrain {
         if (!_gameStarted) {
             throw std::invalid_argument("Game not started");
         }
-        if (_boardResult.empty()) {
-            throw std::invalid_argument("No moves to take back");
-        }
-        Brain::getInstance().removeMove({std::get<0>(_boardResult.back()), std::get<1>(_boardResult.back())},
-                                        std::get<2>(_boardResult.back()));
-        _boardResult.pop_back();
     }
 
 } // namespace pbrain
