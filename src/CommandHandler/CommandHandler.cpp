@@ -102,7 +102,7 @@ namespace pbrain {
             try {
                 _commandsMap[_parsedCommand]();
             } catch (pbrain::Error &e) {
-                std::cerr << "ERROR " << e.what() << std::endl;
+                std::cout << "ERROR" << std::endl;
             }
         } else {
             std::cerr << "ERROR " << command << " not found" << std::endl;
@@ -139,7 +139,6 @@ namespace pbrain {
         if (x < 0 || x > BOARD_SIZE_MAX || y < 0 || y > BOARD_SIZE_MAX) {
             throw std::invalid_argument("Invalid coordinates");
         }
-        _boardResult.emplace_back(x, y, ENEMY);
         Position pos(x, y);
         Brain::getInstance().addMove(pos, ENEMY);
         auto res = Brain::getInstance().calculate(true);
@@ -176,7 +175,6 @@ namespace pbrain {
             throw std::invalid_argument("Game not started");
         }
         Brain::getInstance().clearBoard();
-        _boardResult.clear();
         while (std::getline(std::cin, board)) {
             if (board == "DONE") {
                 break;
