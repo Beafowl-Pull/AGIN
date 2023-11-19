@@ -5,12 +5,12 @@
 ** Brain
 */
 
-#include <iostream>
-#include <string>
+#include "Brain.hpp"
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
+#include <string>
 #include <vector>
-#include "Brain.hpp"
 #include "BrainValues.hpp"
 #include "Error.hpp"
 #include "Values.hpp"
@@ -95,7 +95,8 @@ namespace pbrain {
         Position pos(0, 0);
 
         srand(time(NULL));
-        for (; _board[pos.y][pos.x] != Cell::EMPTY; pos.x = rand() % _boardSize, pos.y = rand() % _boardSize);
+        for (; _board[pos.y][pos.x] != Cell::EMPTY; pos.x = rand() % _boardSize, pos.y = rand() % _boardSize)
+            ;
         addMove(pos, Cell::ALLY);
         return pos;
     }
@@ -111,8 +112,8 @@ namespace pbrain {
         std::vector<Line> lines;
 
         setAlly(ally);
-        // std::cout << "Position checked : " << (ally ? _lastMoveAlly.x : _lastMoveEnemy.x) << ", " << (ally ? _lastMoveAlly.y : _lastMoveEnemy.y) << std::endl;
-        // std::cout << "Team : " << (ally ? "1" : "2") << std::endl;
+        // std::cout << "Position checked : " << (ally ? _lastMoveAlly.x : _lastMoveEnemy.x) << ", " << (ally ?
+        // _lastMoveAlly.y : _lastMoveEnemy.y) << std::endl; std::cout << "Team : " << (ally ? "1" : "2") << std::endl;
         for (auto pos : neighborAxis) {
             Axis axis(pos.x, pos.y);
             std::pair<AxisDatas, AxisDatas> axisPair {
@@ -191,7 +192,6 @@ namespace pbrain {
         // et donc pourquoi pas appliquer un comportement bien distinct si y a besoin
         Cell teamCell = _board[pos.y][pos.x];
 
-        
         if (total == 4 && fstData.emptyCells > 0) {
             // std::cout << "Placing ... "<< std::endl;
             return pos + (fstData.axis * (1 + fstData.align));
@@ -211,11 +211,11 @@ namespace pbrain {
 
     // auto minAfterSpace = 0;
     // for (auto needTotal = 3; needTotal == 0; needTotal--) {
-        // if (total >= needTotal && fstData.afterSpaceAlign > minAfterSpace) {
-            // std::cout << "Placing 2 : " << std::endl;
-            // return pos + (fstData.axis * (1 + fstData.align));
-        // }
-        // minAfterSpace++;
+    // if (total >= needTotal && fstData.afterSpaceAlign > minAfterSpace) {
+    // std::cout << "Placing 2 : " << std::endl;
+    // return pos + (fstData.axis * (1 + fstData.align));
+    // }
+    // minAfterSpace++;
     // }
 
     Position Brain::calculateNextMove(std::vector<Line> lines)
