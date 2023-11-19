@@ -34,13 +34,9 @@ namespace pbrain {
 
             void addMove(const Position &pos, const Cell &state);
 
-            std::optional<Position> calculate(bool ally);
+            void calculate();
 
             void clearBoard();
-
-            bool isAlly();
-
-            void setAlly(bool value);
 
             Position getRandomMove();
 
@@ -55,6 +51,14 @@ namespace pbrain {
             std::optional<Position> checkWin(AxisDatas fstData, AxisDatas sndData, std::size_t total,
                                              const Position &pos);
 
+            std::optional<std::vector<Line>> getLines(const Position &pos);
+
+            bool checkForkInAxis(AxisDatas fst, AxisDatas scd, int total, const Position &pos);
+
+            bool checkSplittedForkInAxis(AxisDatas fst, AxisDatas scd, int total, const Position &pos);
+
+            bool checkFork(std::vector<Line> lines, const Position &pos);
+
             Position calculateNextMove(std::vector<Line>);
 
             bool checkPosOutBoard(const Position &pos);
@@ -65,7 +69,6 @@ namespace pbrain {
             std::size_t _boardSize;
             Position _lastMoveAlly;
             Position _lastMoveEnemy;
-            bool _isAlly;
             std::vector<std::vector<Cell>> _board;
     };
 } // namespace pbrain

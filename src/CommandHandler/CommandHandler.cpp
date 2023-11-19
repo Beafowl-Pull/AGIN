@@ -141,18 +141,7 @@ namespace pbrain {
         }
         Position pos(x, y);
         Brain::getInstance().addMove(pos, ENEMY);
-        auto res = Brain::getInstance().calculate(true);
-        if (res.has_value()) {
-            std::cout << res.value().x << ", " << res.value().y << std::endl;
-            return;
-        }
-        res = Brain::getInstance().calculate(false);
-        if (res.has_value()) {
-            std::cout << res.value().x << ", " << res.value().y << std::endl;
-            return;
-        }
-        auto rPos = Brain::getInstance().getRandomMove();
-        std::cout << rPos.x << ", " << rPos.y << std::endl;
+        Brain::getInstance().calculate();
     }
 
     void CommandHandler::doBegin()

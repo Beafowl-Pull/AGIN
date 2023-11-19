@@ -19,9 +19,9 @@ namespace pbrain {
     Brain::Brain()
         : _boardSize(0),
           _lastMoveAlly({0, 0}),
-          _lastMoveEnemy({0, 0}),
-          _isAlly(false)
+          _lastMoveEnemy({0, 0})
     {}
+
     static void printBoard(const std::vector<std::vector<Cell>> &board)
     {
         for (auto &it : board) {
@@ -41,15 +41,6 @@ namespace pbrain {
                 _board[i].push_back(Cell::EMPTY);
             }
         }
-        // addMove(Position(0, 0), Cell::ALLY);
-        // addMove(Position(1, 0), Cell::ALLY);
-        // addMove(Position(3, 0), Cell::ALLY);
-        // addMove(Position(4, 0), Cell::ALLY);
-
-        // addMove(Position(0, 1), Cell::ENEMY);
-        // addMove(Position(1, 1), Cell::ENEMY);
-        // addMove(Position(3, 1), Cell::ENEMY);
-        // addMove(Position(4, 1), Cell::ENEMY);
         printBoard(_board);
     }
 
@@ -69,16 +60,6 @@ namespace pbrain {
         } else if (state == Cell::ENEMY) {
             _lastMoveEnemy = pos;
         }
-    }
-
-    bool Brain::isAlly()
-    {
-        return (_isAlly);
-    }
-
-    void Brain::setAlly(bool value)
-    {
-        _isAlly = value;
     }
 
     void Brain::clearBoard()
@@ -101,38 +82,22 @@ namespace pbrain {
         return pos;
     }
 
-    // Ici j ai changer en optionnel pour que ce soit le command handler qui print si notre IA a renvoyé un coup
-    // Comme ca on calcule d'abord le lastMove allié puis on calcule le move enemy
-    // Si on renvoit un coup pour allié pcq on est sur de gagner on print direct sans calculer pour l'enemy (pcq on a
-    // gagné :/) Si le calculate(true) n'a rien revoyé alors on le lance avec false pour calculer avec l'enemy Je t ai
-    // écrit ca pcq j ai fait des modifs dans le command handler
-    std::optional<Position> Brain::calculate(bool ally)
+    void Brain::calculate()
     {
-        std::vector<Axis> neighborAxis = {{0, 1}, {1, 0}, {-1, -1}, {1, -1}};
-        std::vector<Line> lines;
-
-        setAlly(ally);
-        for (auto pos : neighborAxis) {
-            Axis axis(pos.x, pos.y);
-            std::pair<AxisDatas, AxisDatas> axisPair {
-                getAxisDatas(axis, _isAlly ? _lastMoveAlly : _lastMoveEnemy),
-                getAxisDatas(axis * -1, _isAlly ? _lastMoveAlly : _lastMoveEnemy)};
-
-            auto total = axisPair.first.align + axisPair.second.align + 1;
-            lines.push_back({axisPair, total});
-            auto res = checkWin(axisPair.first, axisPair.second, total, _isAlly ? _lastMoveAlly : _lastMoveEnemy);
-            if (!res.has_value()) {
-                res = checkWin(axisPair.second, axisPair.first, total, _isAlly ? _lastMoveAlly : _lastMoveEnemy);
-            }
-            if (res.has_value()) {
-                addMove(res.value(), Cell::ALLY);
-                printBoard(_board);
-                return res;
-            }
+        std::optional<std::vector<Line>> allyLines = getLines(_lastMoveAlly);
+        if (!allyLines.has_value()) {
+            return;
         }
-        printBoard(_board);
-        return std::nullopt;
-        // calculateNextMove(lines);
+        std::optional<std::vector<Line>> enemyLines = getLines(_lastMoveEnemy);
+        if (!enemyLines.has_value()) {
+            return;
+        }
+        if (checkFork(allyLines.value(), _lastMoveAlly) || checkFork(enemyLines.value(), _lastMoveEnemy)) {
+            return;
+        }
+        //calculateNextMove(allyLines.value());
+        auto rPos = Brain::getInstance().getRandomMove();
+        std::cout << rPos.x << ", " << rPos.y << std::endl;
     }
 
     std::size_t Brain::checkAlignement(const Position &pos, const Axis &axis, const std::size_t &depth,
@@ -177,6 +142,73 @@ namespace pbrain {
             }
         }
         return std::nullopt;
+    }
+
+    std::optional<std::vector<Line>> Brain::getLines(const Position &pos)
+    {
+        std::vector<Axis> neighborAxis = {{0, 1}, {1, 0}, {-1, -1}, {1, -1}};
+        std::vector<Line> lines;
+
+        for (auto axis : neighborAxis) {
+            std::pair<AxisDatas, AxisDatas> axisPair {
+                getAxisDatas(axis, pos),
+                getAxisDatas(axis * -1, pos)};
+            auto total = axisPair.first.align + axisPair.second.align + 1;
+            lines.push_back({axisPair, total});
+
+            auto res = checkWin(axisPair.first, axisPair.second, total, pos);
+            if (!res.has_value()) {
+                res = checkWin(axisPair.second, axisPair.first, total, pos);
+            }
+            if (res.has_value()) {
+                addMove(res.value(), Cell::ALLY);
+                std::cout << res.value().x << ", " << res.value().y << std::endl;
+                return std::nullopt;
+            }
+        }
+        return lines;
+    }
+
+    bool Brain::checkForkInAxis(AxisDatas fst, AxisDatas scd, int total, const Position &pos)
+    {
+        if (fst.afterSpaceAlign > 0 && scd.afterSpaceAlign > 1) {
+            Position posToPlay(pos + (scd.axis * (scd.align + 1)));
+            std::cout << posToPlay.x << ", " << posToPlay.y << std::endl;
+            return true;
+        }
+        return false;
+    }
+
+    bool Brain::checkSplittedForkInAxis(AxisDatas fst, AxisDatas scd, int total, const Position &pos)
+    {
+        if (fst.emptyCells == 1 && total + fst.afterSpaceAlign >= 3 && scd.emptyCells > 0) {
+            Position afterData(pos + (fst.axis * (fst.align + fst.emptyCells + fst.afterSpaceAlign + 1)));
+            Cell cellAfterData = _board[afterData.y][afterData.x];
+            if (cellAfterData == Cell::EMPTY) {
+                Position posToPlay(pos + (fst.axis * (fst.align + 1)));
+                std::cout << posToPlay.x << ", " << posToPlay.y << std::endl;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool Brain::checkFork(std::vector<Line> lines, const Position &pos)
+    {
+        for (auto line : lines) {
+            if (line.total >= 3) {
+                if (checkForkInAxis(line.line.first, line.line.second, line.total, pos) ||
+                    checkForkInAxis(line.line.second, line.line.first, line.total, pos)) {
+                    return true;
+                }
+            } else {
+                if (checkSplittedForkInAxis(line.line.first, line.line.second, line.total, pos) ||
+                    checkSplittedForkInAxis(line.line.second, line.line.first, line.total, pos)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     Position Brain::calculateNextMove(std::vector<Line> lines)
