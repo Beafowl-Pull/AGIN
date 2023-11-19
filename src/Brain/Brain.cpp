@@ -162,7 +162,7 @@ namespace pbrain {
 
     std::size_t Brain::checkEmptySpace(const Position &pos, const Axis &axis, const std::size_t &depth)
     {
-        if (checkPosOutBoard(pos) || _board[pos.y][pos.x] != Cell::EMPTY) {
+        if (depth == 2 || checkPosOutBoard(pos) || _board[pos.y][pos.x] != Cell::EMPTY) {
             return depth;
         }
         return checkEmptySpace(pos + axis, axis, depth + 1);
@@ -202,6 +202,7 @@ namespace pbrain {
                 return pos + (fstData.axis * (1 + fstData.align));
             }
         }
+        std::cout << "data: " << fstData.align << " " << fstData.afterSpaceAlign << " " << fstData.emptyCells << std::endl;
         if (Cell::ENEMY && total == 3 && (fstData.emptyCells > 0 && sndData.emptyCells > 0)) {
             return pos + (fstData.axis * (1 + fstData.align));
         }
