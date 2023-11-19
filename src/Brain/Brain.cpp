@@ -202,7 +202,7 @@ namespace pbrain {
                 return pos + (fstData.axis * (1 + fstData.align));
             }
         }
-        std::cout << "data: " << fstData.align << " " << fstData.afterSpaceAlign << " " << fstData.emptyCells << std::endl;
+        // std::cout << "data: " << fstData.align << " " << fstData.afterSpaceAlign << " " << fstData.emptyCells << std::endl;
         if (Cell::ENEMY && total == 3 && (fstData.emptyCells > 0 && sndData.emptyCells > 0)) {
             return pos + (fstData.axis * (1 + fstData.align));
         }
