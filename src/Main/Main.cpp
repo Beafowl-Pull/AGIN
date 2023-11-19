@@ -27,6 +27,7 @@ namespace Main {
         std::string command;
         while (std::getline(std::cin, command)) {
             if (command == "END") {
+                // TODO remove temporary file
                 return (EXIT_SUCCESS);
             }
             try {
