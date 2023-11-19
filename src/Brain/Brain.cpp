@@ -172,12 +172,11 @@ namespace pbrain {
             // std::cout << "Empty cells : " << line.line.first.emptyCells << std::endl;
             // std::cout << std::endl;
             // std::cout << "---------- SECOND AXIS -------------" << std::endl;
-            // std::cout << "Axis of line : " << line.line.second.axis.x << ", " << line.line.second.axis.y << std::endl;
-            // std::cout << "Align : " << line.line.second.align << std::endl;
-            // std::cout << "AfterSpaceAlign : " << line.line.second.afterSpaceAlign << std::endl;
-            // std::cout << "Empty cells : " << line.line.second.emptyCells << std::endl;
-            // std::cout << std::endl;
-            // std::cout << "TOTAL LINE : " << line.total << std::endl;
+            // std::cout << "Axis of line : " << line.line.second.axis.x << ", " << line.line.second.axis.y <<
+            // std::endl; std::cout << "Align : " << line.line.second.align << std::endl; std::cout << "AfterSpaceAlign
+            // : " << line.line.second.afterSpaceAlign << std::endl; std::cout << "Empty cells : " <<
+            // line.line.second.emptyCells << std::endl; std::cout << std::endl; std::cout << "TOTAL LINE : " <<
+            // line.total << std::endl;
         }
         return lines;
     }
