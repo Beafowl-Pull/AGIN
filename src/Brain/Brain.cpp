@@ -164,6 +164,21 @@ namespace pbrain {
                 return std::nullopt;
             }
         }
+        for (auto &line : lines) {
+            // std::cout << "---------- FIRST AXIS -------------" << std::endl;
+            // std::cout << "Axis of line : " << line.line.first.axis.x << ", " << line.line.first.axis.y << std::endl;
+            // std::cout << "Align : " << line.line.first.align << std::endl;
+            // std::cout << "AfterSpaceAlign : " << line.line.first.afterSpaceAlign << std::endl;
+            // std::cout << "Empty cells : " << line.line.first.emptyCells << std::endl;
+            // std::cout << std::endl;
+            // std::cout << "---------- SECOND AXIS -------------" << std::endl;
+            // std::cout << "Axis of line : " << line.line.second.axis.x << ", " << line.line.second.axis.y << std::endl;
+            // std::cout << "Align : " << line.line.second.align << std::endl;
+            // std::cout << "AfterSpaceAlign : " << line.line.second.afterSpaceAlign << std::endl;
+            // std::cout << "Empty cells : " << line.line.second.emptyCells << std::endl;
+            // std::cout << std::endl;
+            // std::cout << "TOTAL LINE : " << line.total << std::endl;
+        }
         return lines;
     }
 
@@ -197,6 +212,11 @@ namespace pbrain {
             if (line.total >= 3) {
                 if (checkForkInAxis(line.line.first, line.line.second, line.total, pos)
                     || checkForkInAxis(line.line.second, line.line.first, line.total, pos)) {
+                    return true;
+                }
+                if (line.line.first.emptyCells > 0 && line.line.second.emptyCells > 0) {
+                    Position posToPlay(pos + (line.line.second.axis * (line.line.second.align + 1)));
+                    std::cout << posToPlay.x << ", " << posToPlay.y << std::endl;
                     return true;
                 }
             } else {
