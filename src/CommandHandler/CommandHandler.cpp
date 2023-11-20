@@ -3,16 +3,14 @@
 //
 
 #include "CommandHandler.hpp"
-#include <functional>
 #include <iostream>
 #include <string>
 #include <tuple>
-#include <utility>
+#include "Brain.hpp"
 #include "Error.hpp"
 #include "InfoClass.hpp"
 #include "Values.hpp"
 #include <type_traits>
-#include <unordered_map>
 
 namespace pbrain {
     CommandHandler::CommandHandler()
@@ -120,9 +118,10 @@ namespace pbrain {
         if (std::stoi(size) > BOARD_SIZE_MAX || std::stoi(size) < BOARD_SIZE_MIN) {
             throw std::invalid_argument("Invalid size");
         } else {
-            std::cout << "OK" << std::endl;
+            Brain::getInstance().setBoardSize(std::stoi(size));
             _gameStarted = true;
         }
+        std::cout << "OK" << std::endl;
     }
 
     void CommandHandler::doTurn(const std::string &command)
@@ -136,25 +135,36 @@ namespace pbrain {
         if (command.find(' ') == std::string::npos || command.find(',') == std::string::npos) {
             throw std::invalid_argument("Invalid coordinates");
         }
-        int x = std::stoi(command.substr(command.find(' ') + 1, command.find(',') - command.find(' ') - 1));
-        int y = std::stoi(command.substr(command.find(',') + 1));
-        std::cout << "6,3" << std::endl;
+        std::size_t x = std::stoi(command.substr(command.find(' ') + 1, command.find(',') - command.find(' ') - 1));
+        std::size_t y = std::stoi(command.substr(command.find(',') + 1));
+        if (x < 0 || x > BOARD_SIZE_MAX || y < 0 || y > BOARD_SIZE_MAX) {
+            throw std::invalid_argument("Invalid coordinates");
+        }
+        Position pos(x, y);
+        Brain::getInstance().addMove(pos, ENEMY);
+        Brain::getInstance().calculate();
     }
 
-    void CommandHandler::doBegin() const
+    void CommandHandler::doBegin()
     {
         if (!_gameStarted || _turnStarted) {
             throw std::invalid_argument("Game not started or a turn has already been played");
         }
-        std::cout << "1,6" << std::endl;
+        std::size_t x = Brain::getInstance().getBoardSize() / 2;
+        std::size_t y = Brain::getInstance().getBoardSize() / 2;
+        std::cout << x << ", " << y << std::endl;
+        Position pos(x, y);
+        Brain::getInstance().addMove(pos, Cell::ALLY);
     }
 
+    // Ici calculate un peu spéciale (faut recalculer les coups)
     void CommandHandler::doBoard()
     {
         std::string board;
         if (!_gameStarted) {
             throw std::invalid_argument("Game not started");
         }
+        Brain::getInstance().clearBoard();
         while (std::getline(std::cin, board)) {
             if (board == "DONE") {
                 break;
@@ -165,10 +175,11 @@ namespace pbrain {
             if (x < 0 || x > BOARD_SIZE_MAX || y < 0 || y > BOARD_SIZE_MAX || player < 0 || player > 3) {
                 throw std::invalid_argument("Invalid coordinates");
             }
-            auto tuple = std::make_tuple(x, y, player);
-            _boardResult.push_back(tuple);
+
+            Position pos(x, y);
+            Brain::getInstance().addMove(pos, static_cast<Cell>(player));
         }
-        std::cout << "6,2" << std::endl;
+        // Brain::getInstance().calculate();
     }
 
     void CommandHandler::doInfo(const std::string &command)
@@ -201,7 +212,7 @@ namespace pbrain {
     {
         _gameStarted = false;
         _turnStarted = false;
-        _boardResult.clear();
+        Brain::getInstance().clearBoard();
     }
 
     void CommandHandler::doTakeBack()
@@ -212,7 +223,6 @@ namespace pbrain {
         if (_boardResult.empty()) {
             throw std::invalid_argument("No moves to take back");
         }
-        _boardResult.pop_back();
     }
 
 } // namespace pbrain

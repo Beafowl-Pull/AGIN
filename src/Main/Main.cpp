@@ -15,6 +15,13 @@ namespace Main {
         return (runApp());
     }
 
+    enum Tristate
+    {
+        empty,
+        ally,
+        enemy
+    };
+
     int MainClass::runApp()
     {
         std::string command;

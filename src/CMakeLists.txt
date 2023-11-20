@@ -6,6 +6,7 @@ add_executable(pbrain-agin)
 
 add_subdirectory(CommandHandler)
 add_subdirectory(Main)
+add_subdirectory(Brain)
 
 target_sources(pbrain-agin PRIVATE
         main.cpp

@@ -7,9 +7,9 @@
 
 #include <functional>
 #include <string>
-#include <utility>
 #include <vector>
 #include "InfoClass.hpp"
+#include "Values.hpp"
 #include <unordered_map>
 
 namespace pbrain {
@@ -36,7 +36,7 @@ namespace pbrain {
 
             void doTurn(const std::string &command);
 
-            void doBegin() const;
+            void doBegin();
 
             void doBoard();
 
