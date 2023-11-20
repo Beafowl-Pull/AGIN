@@ -19,7 +19,8 @@ namespace pbrain {
     Brain::Brain()
         : _boardSize(0),
           _lastMoveAlly({0, 0}),
-          _lastMoveEnemy({0, 0})
+          _lastMoveEnemy({0, 0}),
+          _empty(true)
     {}
 
     static void printBoard(const std::vector<std::vector<Cell>> &board)
@@ -51,6 +52,9 @@ namespace pbrain {
 
     void Brain::addMove(const Position &pos, const Cell &state)
     {
+        if (_empty) {
+            _empty = false;
+        }
         if (checkPosOutBoard(pos)) {
             throw Error("Pos out of range : " + std::to_string(pos.x) + " " + std::to_string(pos.y));
         }
@@ -78,12 +82,21 @@ namespace pbrain {
         srand(time(NULL));
         for (; _board[pos.y][pos.x] != Cell::EMPTY; pos.x = rand() % _boardSize, pos.y = rand() % _boardSize)
             ;
-        addMove(pos, Cell::ALLY);
         return pos;
     }
 
     void Brain::calculate()
     {
+        if (_empty) {
+            std::size_t x = _boardSize / 2;
+            Position pos = {x, x};
+            if (_lastMoveEnemy == pos) {
+                pos += {0, 1};
+            }
+            addMove(pos, Cell::ALLY);
+            std::cout << pos.x << ", " << pos.y << std::endl;
+            return;
+        }
         std::optional<std::vector<Line>> allyLines = getLines(_lastMoveAlly);
         if (!allyLines.has_value()) {
             return;
@@ -167,7 +180,7 @@ namespace pbrain {
 
     bool Brain::checkForkInAxis(AxisDatas fst, AxisDatas scd, int total, const Position &pos)
     {
-        if (fst.afterSpaceAlign > 0 && scd.afterSpaceAlign > 1) {
+        if (fst.emptyCells > 0 && scd.emptyCells > 1) {
             Position posToPlay(pos + (scd.axis * (scd.align + 1)));
             std::cout << posToPlay.x << ", " << posToPlay.y << std::endl;
             return true;
@@ -182,6 +195,7 @@ namespace pbrain {
             Cell cellAfterData = _board[afterData.y][afterData.x];
             if (cellAfterData == Cell::EMPTY) {
                 Position posToPlay(pos + (fst.axis * (fst.align + 1)));
+                addMove(posToPlay, _board[pos.y][pos.x]);
                 std::cout << posToPlay.x << ", " << posToPlay.y << std::endl;
                 return true;
             }
@@ -195,11 +209,6 @@ namespace pbrain {
             if (line.total >= 3) {
                 if (checkForkInAxis(line.line.first, line.line.second, line.total, pos)
                     || checkForkInAxis(line.line.second, line.line.first, line.total, pos)) {
-                    return true;
-                }
-                if (line.line.first.emptyCells > 0 && line.line.second.emptyCells > 0) {
-                    Position posToPlay(pos + (line.line.second.axis * (line.line.second.align + 1)));
-                    std::cout << posToPlay.x << ", " << posToPlay.y << std::endl;
                     return true;
                 }
             } else if (checkSplittedForkInAxis(line.line.first, line.line.second, line.total, pos)
@@ -260,10 +269,13 @@ namespace pbrain {
             res = checkMove(max.line.first, max.line.second, max.total);
             if (!res.has_value()) {
                 res = checkMove(max.line.second, max.line.first, max.total);
-                std::cout << "WRONG NULLOPT" << std::endl;
-                res = getRandomMove();
+                if (!res.has_value()) {
+                    std::cout << "WRONG NULLOPT" << std::endl;
+                    res = getRandomMove();
+                }
             }
         }
+        addMove(res.value(), Cell::ALLY);
         std::cout << res.value().x << ", " << res.value().y << std::endl;
     }
 

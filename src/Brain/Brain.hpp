@@ -74,5 +74,6 @@ namespace pbrain {
             Position _lastMoveAlly;
             Position _lastMoveEnemy;
             std::vector<std::vector<Cell>> _board;
+            bool _empty;
     };
 } // namespace pbrain
