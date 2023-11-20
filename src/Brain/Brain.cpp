@@ -249,7 +249,6 @@ namespace pbrain {
             }
         } else if (total == 1 && first.emptyCells > 3 && second.emptyCells > 0
                    || total == 1 && first.emptyCells > 2 && second.emptyCells > 1) {
-
             return _lastMoveAlly + (first.axis * (first.align + 2));
         } else if (first.emptyCells >= 1) {
             return _lastMoveAlly + (first.axis * (first.align + 1));
