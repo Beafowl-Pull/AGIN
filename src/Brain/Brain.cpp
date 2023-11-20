@@ -148,9 +148,7 @@ namespace pbrain {
         std::vector<Line> lines;
 
         for (auto axis : neighborAxis) {
-            std::pair<AxisDatas, AxisDatas> axisPair {
-                getAxisDatas(axis, pos),
-                getAxisDatas(axis * -1, pos)};
+            std::pair<AxisDatas, AxisDatas> axisPair {getAxisDatas(axis, pos), getAxisDatas(axis * -1, pos)};
             auto total = axisPair.first.align + axisPair.second.align + 1;
             lines.push_back({axisPair, total});
 
@@ -195,13 +193,18 @@ namespace pbrain {
     {
         for (auto line : lines) {
             if (line.total >= 3) {
-                if (checkForkInAxis(line.line.first, line.line.second, line.total, pos) ||
-                    checkForkInAxis(line.line.second, line.line.first, line.total, pos)) {
+                if (checkForkInAxis(line.line.first, line.line.second, line.total, pos)
+                    || checkForkInAxis(line.line.second, line.line.first, line.total, pos)) {
+                    return true;
+                }
+                if (line.line.first.emptyCells > 0 && line.line.second.emptyCells > 0) {
+                    Position posToPlay(pos + (line.line.second.axis * (line.line.second.align + 1)));
+                    std::cout << posToPlay.x << ", " << posToPlay.y << std::endl;
                     return true;
                 }
             } else {
-                if (checkSplittedForkInAxis(line.line.first, line.line.second, line.total, pos) ||
-                    checkSplittedForkInAxis(line.line.second, line.line.first, line.total, pos)) {
+                if (checkSplittedForkInAxis(line.line.first, line.line.second, line.total, pos)
+                    || checkSplittedForkInAxis(line.line.second, line.line.first, line.total, pos)) {
                     return true;
                 }
             }
