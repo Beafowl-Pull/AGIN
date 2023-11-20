@@ -203,7 +203,7 @@ namespace pbrain {
                     return true;
                 }
             } else if (checkSplittedForkInAxis(line.line.first, line.line.second, line.total, pos)
-                || checkSplittedForkInAxis(line.line.second, line.line.first, line.total, pos)) {
+                       || checkSplittedForkInAxis(line.line.second, line.line.first, line.total, pos)) {
                 return true;
             }
         }
