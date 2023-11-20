@@ -95,9 +95,7 @@ namespace pbrain {
         if (checkFork(allyLines.value(), _lastMoveAlly) || checkFork(enemyLines.value(), _lastMoveEnemy)) {
             return;
         }
-        //calculateNextMove(allyLines.value());
-        auto rPos = Brain::getInstance().getRandomMove();
-        std::cout << rPos.x << ", " << rPos.y << std::endl;
+        calculateNextMove(allyLines.value());
     }
 
     std::size_t Brain::checkAlignement(const Position &pos, const Axis &axis, const std::size_t &depth,
@@ -211,15 +209,60 @@ namespace pbrain {
         return false;
     }
 
-    Position Brain::calculateNextMove(std::vector<Line> lines)
+    Line &Brain::compareLines(Line &fstLine, Line &sndLine)
     {
+        if (sndLine.line.first.emptyCells == 0 && sndLine.line.second.emptyCells == 0) {
+            return fstLine;
+        }
+        auto sndLineFstAdd = sndLine.total + sndLine.line.first.afterSpaceAlign;
+        if (sndLineFstAdd > fstLine.total + fstLine.line.first.afterSpaceAlign &&
+             sndLineFstAdd > fstLine.total + fstLine.line.second.afterSpaceAlign) {
+            return sndLine;
+        } else {
+            return fstLine;
+        }
+    }
+
+    std::optional<Position> Brain::checkMove(AxisDatas first, AxisDatas second, int total)
+    {
+        if (total + first.afterSpaceAlign == 3) {
+            return _lastMoveAlly + (first.axis * (first.align + 1));
+        } else if (total == 1 && first.afterSpaceAlign == 1) {
+            Position afterData = _lastMoveAlly + (first.axis * (first.align + first.afterSpaceAlign + first.emptyCells + 1));
+            Cell cellAfterData = _board[afterData.y][afterData.x];
+            afterData + first.axis;
+            Cell scdCellAfterData = _board[afterData.y][afterData.x];
+            if (second.emptyCells > 0 && cellAfterData == Cell::EMPTY && scdCellAfterData == Cell::EMPTY ||
+                second.emptyCells > 1 && cellAfterData == Cell::EMPTY) {
+                return _lastMoveAlly + (first.axis * (first.align + 1));
+            }
+        } else if (total == 1 && first.emptyCells > 3 && second.emptyCells > 0 ||
+                   total == 1 && first.emptyCells > 2 && second.emptyCells > 1) {
+            return _lastMoveAlly + (first.axis * (first.align + 2));
+        } else if (first.emptyCells >= 1) {
+            return _lastMoveAlly + (first.axis * (first.align + 1));
+        }
+        return std::nullopt;
+    }
+
+    void Brain::calculateNextMove(std::vector<Line> lines)
+    {
+        std::optional<Position> res;
         auto &max = lines.front();
         for (auto &line : lines) {
-            if (line.total > max.total) {
-                max = line;
+            max = compareLines(max, line);
+        }
+        if (max.line.first.emptyCells == 0 && max.line.second.emptyCells == 0) {
+            res = getRandomMove();
+        } else {
+            res = checkMove(max.line.first, max.line.second, max.total);
+            if (!res.has_value()) {
+                res = checkMove(max.line.second, max.line.first, max.total);
+                std::cout << "WRONG NULLOPT" << std::endl;
+                res = getRandomMove();
             }
         }
-        return {0, 0};
+        std::cout << res.value().x << ", " << res.value().y << std::endl;
     }
 
     bool Brain::checkPosOutBoard(const Position &pos)

@@ -59,7 +59,11 @@ namespace pbrain {
 
             bool checkFork(std::vector<Line> lines, const Position &pos);
 
-            Position calculateNextMove(std::vector<Line>);
+            Line &compareLines(Line &fstLine, Line &sndLine);
+
+            std::optional<Position> checkMove(AxisDatas first, AxisDatas second, int total);
+
+            void calculateNextMove(std::vector<Line>);
 
             bool checkPosOutBoard(const Position &pos);
 
