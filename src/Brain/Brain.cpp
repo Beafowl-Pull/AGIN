@@ -235,7 +235,7 @@ namespace pbrain {
 
     std::optional<Position> Brain::checkMove(AxisDatas first, AxisDatas second, int total)
     {
-        if (total + first.afterSpaceAlign == 3) {
+        if (total + first.afterSpaceAlign == 3 && first.emptyCells > 0) {
             return _lastMoveAlly + (first.axis * (first.align + 1));
         } else if (total == 1 && first.afterSpaceAlign == 1) {
             Position afterData =
@@ -249,6 +249,7 @@ namespace pbrain {
             }
         } else if (total == 1 && first.emptyCells > 3 && second.emptyCells > 0
                    || total == 1 && first.emptyCells > 2 && second.emptyCells > 1) {
+
             return _lastMoveAlly + (first.axis * (first.align + 2));
         } else if (first.emptyCells >= 1) {
             return _lastMoveAlly + (first.axis * (first.align + 1));

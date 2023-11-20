@@ -121,6 +121,7 @@ namespace pbrain {
             Brain::getInstance().setBoardSize(std::stoi(size));
             _gameStarted = true;
         }
+        std::cout << "OK" << std::endl;
     }
 
     void CommandHandler::doTurn(const std::string &command)
