@@ -218,8 +218,8 @@ namespace pbrain {
             return fstLine;
         }
         auto sndLineFstAdd = sndLine.total + sndLine.line.first.afterSpaceAlign;
-        if (sndLineFstAdd > fstLine.total + fstLine.line.first.afterSpaceAlign &&
-             sndLineFstAdd > fstLine.total + fstLine.line.second.afterSpaceAlign) {
+        if (sndLineFstAdd > fstLine.total + fstLine.line.first.afterSpaceAlign
+            && sndLineFstAdd > fstLine.total + fstLine.line.second.afterSpaceAlign) {
             return sndLine;
         } else {
             return fstLine;
@@ -231,16 +231,17 @@ namespace pbrain {
         if (total + first.afterSpaceAlign == 3) {
             return _lastMoveAlly + (first.axis * (first.align + 1));
         } else if (total == 1 && first.afterSpaceAlign == 1) {
-            Position afterData = _lastMoveAlly + (first.axis * (first.align + first.afterSpaceAlign + first.emptyCells + 1));
+            Position afterData =
+                _lastMoveAlly + (first.axis * (first.align + first.afterSpaceAlign + first.emptyCells + 1));
             Cell cellAfterData = _board[afterData.y][afterData.x];
             afterData + first.axis;
             Cell scdCellAfterData = _board[afterData.y][afterData.x];
-            if (second.emptyCells > 0 && cellAfterData == Cell::EMPTY && scdCellAfterData == Cell::EMPTY ||
-                second.emptyCells > 1 && cellAfterData == Cell::EMPTY) {
+            if (second.emptyCells > 0 && cellAfterData == Cell::EMPTY && scdCellAfterData == Cell::EMPTY
+                || second.emptyCells > 1 && cellAfterData == Cell::EMPTY) {
                 return _lastMoveAlly + (first.axis * (first.align + 1));
             }
-        } else if (total == 1 && first.emptyCells > 3 && second.emptyCells > 0 ||
-                   total == 1 && first.emptyCells > 2 && second.emptyCells > 1) {
+        } else if (total == 1 && first.emptyCells > 3 && second.emptyCells > 0
+                   || total == 1 && first.emptyCells > 2 && second.emptyCells > 1) {
             return _lastMoveAlly + (first.axis * (first.align + 2));
         } else if (first.emptyCells >= 1) {
             return _lastMoveAlly + (first.axis * (first.align + 1));
