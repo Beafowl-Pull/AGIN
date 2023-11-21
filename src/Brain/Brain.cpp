@@ -192,6 +192,9 @@ namespace pbrain {
     {
         if (fst.emptyCells == 1 && total + fst.afterSpaceAlign >= 3 && scd.emptyCells > 0) {
             Position afterData(pos + (fst.axis * (fst.align + fst.emptyCells + fst.afterSpaceAlign + 1)));
+            if (checkPosOutBoard(afterData)) {
+                return (false);
+            }
             Cell cellAfterData = _board[afterData.y][afterData.x];
             if (cellAfterData == Cell::EMPTY) {
                 Position posToPlay(pos + (fst.axis * (fst.align + 1)));
