@@ -94,7 +94,7 @@ namespace pbrain {
                 pos += {0, 1};
             }
             addMove(pos, Cell::ALLY);
-            std::cout << pos.x << ", " << pos.y << std::endl;
+            std::cout << pos.x << "," << pos.y << std::endl;
             return;
         }
         std::optional<std::vector<Line>> allyLines = getLines(_lastMoveAlly);
@@ -171,7 +171,7 @@ namespace pbrain {
             }
             if (res.has_value()) {
                 addMove(res.value(), Cell::ALLY);
-                std::cout << res.value().x << ", " << res.value().y << std::endl;
+                std::cout << res.value().x << "," << res.value().y << std::endl;
                 return std::nullopt;
             }
         }
@@ -182,7 +182,7 @@ namespace pbrain {
     {
         if (fst.emptyCells > 0 && scd.emptyCells > 1) {
             Position posToPlay(pos + (scd.axis * (scd.align + 1)));
-            std::cout << posToPlay.x << ", " << posToPlay.y << std::endl;
+            std::cout << posToPlay.x << "," << posToPlay.y << std::endl;
             return true;
         }
         return false;
@@ -196,7 +196,7 @@ namespace pbrain {
             if (cellAfterData == Cell::EMPTY) {
                 Position posToPlay(pos + (fst.axis * (fst.align + 1)));
                 addMove(posToPlay, _board[pos.y][pos.x]);
-                std::cout << posToPlay.x << ", " << posToPlay.y << std::endl;
+                std::cout << posToPlay.x << "," << posToPlay.y << std::endl;
                 return true;
             }
         }
@@ -276,7 +276,7 @@ namespace pbrain {
             }
         }
         addMove(res.value(), Cell::ALLY);
-        std::cout << res.value().x << ", " << res.value().y << std::endl;
+        std::cout << res.value().x << "," << res.value().y << std::endl;
     }
 
     bool Brain::checkPosOutBoard(const Position &pos)

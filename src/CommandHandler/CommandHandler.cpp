@@ -152,7 +152,7 @@ namespace pbrain {
         }
         std::size_t x = Brain::getInstance().getBoardSize() / 2;
         std::size_t y = Brain::getInstance().getBoardSize() / 2;
-        std::cout << x << ", " << y << std::endl;
+        std::cout << x << "," << y << std::endl;
         Position pos(x, y);
         Brain::getInstance().addMove(pos, Cell::ALLY);
     }
@@ -179,7 +179,7 @@ namespace pbrain {
             Position pos(x, y);
             Brain::getInstance().addMove(pos, static_cast<Cell>(player));
         }
-        // Brain::getInstance().calculate();
+        Brain::getInstance().calculate();
     }
 
     void CommandHandler::doInfo(const std::string &command)
