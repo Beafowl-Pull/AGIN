@@ -27,9 +27,9 @@ namespace pbrain {
     {
         for (auto &it : board) {
             for (auto &it2 : it) {
-                // std::cout << it2;
+                // std::cerr << it2;
             }
-            // std::cout << std::endl;
+            // std::cerr << std::endl;
         }
     }
 
@@ -42,7 +42,6 @@ namespace pbrain {
                 _board[i].push_back(Cell::EMPTY);
             }
         }
-        printBoard(_board);
     }
 
     const std::size_t &Brain::getBoardSize()
@@ -182,6 +181,7 @@ namespace pbrain {
     {
         if (fst.emptyCells > 0 && scd.emptyCells > 1) {
             Position posToPlay(pos + (scd.axis * (scd.align + 1)));
+            addMove(posToPlay, Cell::ALLY);
             std::cout << posToPlay.x << "," << posToPlay.y << std::endl;
             return true;
         }
@@ -195,7 +195,7 @@ namespace pbrain {
             Cell cellAfterData = _board[afterData.y][afterData.x];
             if (cellAfterData == Cell::EMPTY) {
                 Position posToPlay(pos + (fst.axis * (fst.align + 1)));
-                addMove(posToPlay, _board[pos.y][pos.x]);
+                addMove(posToPlay, Cell::ALLY);
                 std::cout << posToPlay.x << "," << posToPlay.y << std::endl;
                 return true;
             }
@@ -270,10 +270,12 @@ namespace pbrain {
             if (!res.has_value()) {
                 res = checkMove(max.line.second, max.line.first, max.total);
                 if (!res.has_value()) {
-                    std::cout << "WRONG NULLOPT" << std::endl;
-                    res = getRandomMove();
+                    std::cerr << "WRONG NULLOPT" << std::endl;
                 }
             }
+        }
+        while (!res.has_value() || _board[res.value().y][res.value().x] != Cell::EMPTY) {
+            res = getRandomMove();
         }
         addMove(res.value(), Cell::ALLY);
         std::cout << res.value().x << "," << res.value().y << std::endl;
