@@ -266,11 +266,17 @@ namespace pbrain {
     {
         Axis axis(0, 0);
 
-        if (!checkPosOutBoard(_lastMoveAlly + _strongestLine.line.first.axis) && _board[_lastMoveAlly.y + _strongestLine.line.first.axis.y][_lastMoveAlly.x + _strongestLine.line.first.axis.x] == Cell::ALLY) {
+        if (!checkPosOutBoard(_lastMoveAlly + _strongestLine.line.first.axis)
+            && _board[_lastMoveAlly.y + _strongestLine.line.first.axis.y]
+                     [_lastMoveAlly.x + _strongestLine.line.first.axis.x]
+                   == Cell::ALLY) {
             axis = _strongestLine.line.first.axis;
             return axis;
         }
-        if (!checkPosOutBoard(_lastMoveAlly + _strongestLine.line.second.axis) && _board[_lastMoveAlly.y + _strongestLine.line.second.axis.y][_lastMoveAlly.x + _strongestLine.line.second.axis.x] == Cell::ALLY) {
+        if (!checkPosOutBoard(_lastMoveAlly + _strongestLine.line.second.axis)
+            && _board[_lastMoveAlly.y + _strongestLine.line.second.axis.y]
+                     [_lastMoveAlly.x + _strongestLine.line.second.axis.x]
+                   == Cell::ALLY) {
             axis = _strongestLine.line.second.axis;
             return axis;
         }
@@ -282,7 +288,7 @@ namespace pbrain {
         Position pos(_lastMoveAlly);
         std::optional<Axis> axis = getAlignAxis();
 
-        if (axis == std::nullopt){
+        if (axis == std::nullopt) {
             return std::nullopt;
         }
         Axis side(axis.value().y, axis.value().x * -1);
@@ -299,7 +305,7 @@ namespace pbrain {
         }
     }
 
-    void Brain::calculateNextMove (std::vector<Line> lines)
+    void Brain::calculateNextMove(std::vector<Line> lines)
     {
         std::optional<Position> res;
         auto &max = lines.front();
