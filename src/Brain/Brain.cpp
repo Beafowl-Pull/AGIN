@@ -19,8 +19,9 @@ namespace pbrain {
     Brain::Brain()
         : _boardSize(0),
           _lastMoveAlly({0, 0}),
+          _lastAllyIsDefense(false),
           _lastMoveEnemy({0, 0}),
-          _empty(true)
+          _empty(true),
     {}
 
     static void printBoard(const std::vector<std::vector<Cell>> &board)
@@ -93,18 +94,25 @@ namespace pbrain {
                 pos += {0, 1};
             }
             addMove(pos, Cell::ALLY);
+            _lastAllyIsDefense = false;
             std::cout << pos.x << "," << pos.y << std::endl;
             return;
         }
         std::optional<std::vector<Line>> allyLines = getLines(_lastMoveAlly);
         if (!allyLines.has_value()) {
+            _lastAllyIsDefense = false;
             return;
         }
         std::optional<std::vector<Line>> enemyLines = getLines(_lastMoveEnemy);
         if (!enemyLines.has_value()) {
+            _lastAllyIsDefense = true;
             return;
         }
-        if (checkFork(allyLines.value(), _lastMoveAlly) || checkFork(enemyLines.value(), _lastMoveEnemy)) {
+        if (checkFork(allyLines.value(), _lastMoveAlly)){
+            _lastAllyIsDefense = false;
+            return;
+        } else if (checkFork(enemyLines.value(), _lastMoveEnemy)) {
+            _lastAllyIsDefense = true;
             return;
         }
         calculateNextMove(allyLines.value());
@@ -285,7 +293,7 @@ namespace pbrain {
 
     std::optional<Position> Brain::checkSides()
     {
-        Position pos(_lastMoveAlly);
+        Position pos(_strongestLinePos);
         std::optional<Axis> axis = getAlignAxis();
 
         if (axis == std::nullopt) {
@@ -313,8 +321,11 @@ namespace pbrain {
             max = compareLines(max, line);
         }
         _strongestLine = compareLines(_strongestLine, max);
-        if (max.line.first.emptyCells == 0 && max.line.second.emptyCells == 0) {
-            // res = getRandomMove();
+        if (_strongestLine == max) {
+            _strongestLinePos = _lastMoveAlly;
+        }
+        //dcp ici on check si la strongest est bloquée psk le last move peut ne pas en faire partie, qu'il soit un move d'attack ou pas
+        if (_strongestLine.line.first.emptyCells == 0 && _strongestLine.line.second.emptyCells == 0) {
             res = checkSides();
         } else {
             res = checkMove(max.line.first, max.line.second, max.total);

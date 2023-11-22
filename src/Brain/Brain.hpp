@@ -76,7 +76,9 @@ namespace pbrain {
 
             std::size_t _boardSize;
             Line _strongestLine;
+            Position _strongestLinePos;
             Position _lastMoveAlly;
+            bool _lastAllyIsDefense;
             Position _lastMoveEnemy;
             std::vector<std::vector<Cell>> _board;
             bool _empty;
