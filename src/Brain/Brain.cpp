@@ -243,6 +243,9 @@ namespace pbrain {
         } else if (total == 1 && first.afterSpaceAlign == 1) {
             Position afterData =
                 _lastMoveAlly + (first.axis * (first.align + first.afterSpaceAlign + first.emptyCells + 1));
+            if (checkPosOutBoard(afterData)) {
+                return (std::nullopt);
+            }
             Cell cellAfterData = _board[afterData.y][afterData.x];
             afterData + first.axis;
             Cell scdCellAfterData = _board[afterData.y][afterData.x];
