@@ -262,15 +262,54 @@ namespace pbrain {
         return std::nullopt;
     }
 
-    void Brain::calculateNextMove(std::vector<Line> lines)
+    std::optional<Axis> Brain::getAlignAxis()
+    {
+        Axis axis(0, 0);
+
+        if (!checkPosOutBoard(_lastMoveAlly + _strongestLine.line.first.axis) && _board[_lastMoveAlly.y + _strongestLine.line.first.axis.y][_lastMoveAlly.x + _strongestLine.line.first.axis.x] == Cell::ALLY) {
+            axis = _strongestLine.line.first.axis;
+            return axis;
+        }
+        if (!checkPosOutBoard(_lastMoveAlly + _strongestLine.line.second.axis) && _board[_lastMoveAlly.y + _strongestLine.line.second.axis.y][_lastMoveAlly.x + _strongestLine.line.second.axis.x] == Cell::ALLY) {
+            axis = _strongestLine.line.second.axis;
+            return axis;
+        }
+        return std::nullopt;
+    }
+
+    std::optional<Position> Brain::checkSides()
+    {
+        Position pos(_lastMoveAlly);
+        std::optional<Axis> axis = getAlignAxis();
+
+        if (axis == std::nullopt){
+            return std::nullopt;
+        }
+        Axis side(axis.value().y, axis.value().x * -1);
+        std::pair<Axis, Axis> sides(side, side * -1);
+        for (; _board[pos.y][pos.x] != Cell::ALLY; pos = pos + axis.value()) {
+            auto tmpPos = pos + sides.first;
+            if (_board[tmpPos.y][tmpPos.x] == Cell::EMPTY) {
+                return tmpPos;
+            }
+            tmpPos = tmpPos + sides.second;
+            if (_board[tmpPos.y][tmpPos.x] == Cell::EMPTY) {
+                return tmpPos;
+            }
+        }
+    }
+
+    void Brain::calculateNextMove (std::vector<Line> lines)
     {
         std::optional<Position> res;
         auto &max = lines.front();
         for (auto &line : lines) {
             max = compareLines(max, line);
         }
+        _strongestLine = compareLines(_strongestLine, max);
         if (max.line.first.emptyCells == 0 && max.line.second.emptyCells == 0) {
-            res = getRandomMove();
+            // res = getRandomMove();
+            res = checkSides();
         } else {
             res = checkMove(max.line.first, max.line.second, max.total);
             if (!res.has_value()) {

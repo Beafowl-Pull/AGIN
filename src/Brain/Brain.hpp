@@ -67,10 +67,15 @@ namespace pbrain {
 
             bool checkPosOutBoard(const Position &pos);
 
+            std::optional<Position> checkSides();
+
+            std::optional<Axis> getAlignAxis();
+
             Brain();
             ~Brain() = default;
 
             std::size_t _boardSize;
+            Line _strongestLine;
             Position _lastMoveAlly;
             Position _lastMoveEnemy;
             std::vector<std::vector<Cell>> _board;
