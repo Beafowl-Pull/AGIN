@@ -55,7 +55,6 @@ namespace pbrain {
                         {"INFO",
                          [this] {
                              try {
-                                 CommandHandler::doInfo(_commands);
                              } catch (std::invalid_argument &e) {
                                  throw pbrain::Error(e.what());
                              }

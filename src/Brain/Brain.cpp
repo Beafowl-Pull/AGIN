@@ -18,10 +18,11 @@
 namespace pbrain {
     Brain::Brain()
         : _boardSize(0),
+          _strongestLinePos({0, 0}),
           _lastMoveAlly({0, 0}),
           _lastAllyIsDefense(false),
           _lastMoveEnemy({0, 0}),
-          _empty(true),
+          _empty(true)
     {}
 
     static void printBoard(const std::vector<std::vector<Cell>> &board)

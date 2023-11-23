@@ -80,7 +80,7 @@ namespace pbrain {
             Position _lastMoveAlly;
             bool _lastAllyIsDefense;
             Position _lastMoveEnemy;
-            std::vector<std::vector<Cell>> _board;
             bool _empty;
+            std::vector<std::vector<Cell>> _board;
     };
 } // namespace pbrain
