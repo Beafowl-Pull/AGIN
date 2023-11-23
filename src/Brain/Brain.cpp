@@ -20,7 +20,6 @@ namespace pbrain {
         : _boardSize(0),
           _strongestLinePos({0, 0}),
           _lastMoveAlly({0, 0}),
-          _lastAllyIsDefense(false),
           _lastMoveEnemy({0, 0}),
           _empty(true)
     {}
@@ -78,7 +77,7 @@ namespace pbrain {
 
     Position Brain::getRandomMove()
     {
-        Position pos(0, 0);
+        Position pos(rand() % _boardSize, rand() % _boardSize);
 
         srand(time(NULL));
         for (; _board[pos.y][pos.x] != Cell::EMPTY; pos.x = rand() % _boardSize, pos.y = rand() % _boardSize)
@@ -95,25 +94,18 @@ namespace pbrain {
                 pos += {0, 1};
             }
             addMove(pos, Cell::ALLY);
-            _lastAllyIsDefense = false;
             std::cout << pos.x << "," << pos.y << std::endl;
             return;
         }
         std::optional<std::vector<Line>> allyLines = getLines(_lastMoveAlly);
         if (!allyLines.has_value()) {
-            _lastAllyIsDefense = false;
             return;
         }
         std::optional<std::vector<Line>> enemyLines = getLines(_lastMoveEnemy);
         if (!enemyLines.has_value()) {
-            _lastAllyIsDefense = true;
             return;
         }
-        if (checkFork(allyLines.value(), _lastMoveAlly)) {
-            _lastAllyIsDefense = false;
-            return;
-        } else if (checkFork(enemyLines.value(), _lastMoveEnemy)) {
-            _lastAllyIsDefense = true;
+        if (checkFork(allyLines.value(), _lastMoveAlly) || checkFork(enemyLines.value(), _lastMoveEnemy)) {
             return;
         }
         calculateNextMove(allyLines.value());
@@ -163,7 +155,7 @@ namespace pbrain {
         return std::nullopt;
     }
 
-    std::optional<std::vector<Line>> Brain::getLines(const Position &pos)
+    std::optional<std::vector<Line>> Brain::getLines(const Position &pos, bool printable)
     {
         std::vector<Axis> neighborAxis = {{0, 1}, {1, 0}, {-1, -1}, {1, -1}};
         std::vector<Line> lines;
@@ -177,7 +169,7 @@ namespace pbrain {
             if (!res.has_value()) {
                 res = checkWin(axisPair.second, axisPair.first, total, pos);
             }
-            if (res.has_value()) {
+            if (res.has_value(), && printable) {
                 addMove(res.value(), Cell::ALLY);
                 std::cout << res.value().x << "," << res.value().y << std::endl;
                 return std::nullopt;
@@ -193,6 +185,20 @@ namespace pbrain {
             addMove(posToPlay, Cell::ALLY);
             std::cout << posToPlay.x << "," << posToPlay.y << std::endl;
             return true;
+        } else if (fst.emptyCells == 0 && scd.emptyCells > 1) {
+            auto forkPos = pos + (scd.axis * (scd.align + 1));
+            _board[forkPos.y][forkPos.x] = _board[pos.y][pos.x];
+            auto lines = getLines(forkPos, false).value();
+            _board[forkPos.y][forkPos.x] = Cell::EMPTY;
+            for (auto line : lines) {
+                if (line.line.fst.axis == fst.axis || line.line.fst.axis == scd.axis) {
+                    continue;
+                }
+                if (line.total == 3 && line.line.fst.emptyCells + line.line.scd.emptyCells > 2 ||
+                    line.total == 4) {
+                    
+                }
+            }
         }
         return false;
     }
@@ -325,8 +331,6 @@ namespace pbrain {
         if (_strongestLine == max) {
             _strongestLinePos = _lastMoveAlly;
         }
-        // dcp ici on check si la strongest est bloquée psk le last move peut ne pas en faire partie, qu'il soit un move
-        // d'attack ou pas
         if (_strongestLine.line.first.emptyCells == 0 && _strongestLine.line.second.emptyCells == 0) {
             res = checkSides();
         } else {
@@ -338,7 +342,7 @@ namespace pbrain {
                 }
             }
         }
-        while (!res.has_value() || _board[res.value().y][res.value().x] != Cell::EMPTY) {
+        if (res == std::nullopt) {
             res = getRandomMove();
         }
         addMove(res.value(), Cell::ALLY);

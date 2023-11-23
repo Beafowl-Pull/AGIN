@@ -51,7 +51,7 @@ namespace pbrain {
             std::optional<Position> checkWin(AxisDatas fstData, AxisDatas sndData, std::size_t total,
                                              const Position &pos);
 
-            std::optional<std::vector<Line>> getLines(const Position &pos);
+            std::optional<std::vector<Line>> getLines(const Position &pos, bool printable = true);
 
             bool checkForkInAxis(AxisDatas fst, AxisDatas scd, int total, const Position &pos);
 
@@ -78,7 +78,6 @@ namespace pbrain {
             Line _strongestLine;
             Position _strongestLinePos;
             Position _lastMoveAlly;
-            bool _lastAllyIsDefense;
             Position _lastMoveEnemy;
             bool _empty;
             std::vector<std::vector<Cell>> _board;
