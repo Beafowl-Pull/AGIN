@@ -112,12 +112,11 @@ struct Line
 
         bool operator==(const Line &line) const
         {
-            if (this->line.first.align != line.line.first.align ||
-                this->line.second.align != line.line.second.align ||
-                this->line.first.emptyCells != line.line.first.emptyCells ||
-                this->line.second.emptyCells != line.line.second.emptyCells ||
-                this->line.first.afterSpaceAlign != line.line.first.afterSpaceAlign ||
-                this->line.second.afterSpaceAlign != line.line.second.afterSpaceAlign || this->total != line.total) {
+            if (this->line.first.align != line.line.first.align || this->line.second.align != line.line.second.align
+                || this->line.first.emptyCells != line.line.first.emptyCells
+                || this->line.second.emptyCells != line.line.second.emptyCells
+                || this->line.first.afterSpaceAlign != line.line.first.afterSpaceAlign
+                || this->line.second.afterSpaceAlign != line.line.second.afterSpaceAlign || this->total != line.total) {
                 return false;
             }
             return true;
