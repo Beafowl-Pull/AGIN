@@ -169,7 +169,7 @@ namespace pbrain {
             if (!res.has_value()) {
                 res = checkWin(axisPair.second, axisPair.first, total, pos);
             }
-            if (res.has_value(), &&printable) {
+            if (res.has_value() && printable) {
                 addMove(res.value(), Cell::ALLY);
                 std::cout << res.value().x << "," << res.value().y << std::endl;
                 return std::nullopt;
@@ -191,10 +191,10 @@ namespace pbrain {
             auto lines = getLines(forkPos, false).value();
             _board[forkPos.y][forkPos.x] = Cell::EMPTY;
             for (auto line : lines) {
-                if (line.line.fst.axis == fst.axis || line.line.fst.axis == scd.axis) {
+                if (line.line.first.axis == fst.axis || line.line.first.axis == scd.axis) {
                     continue;
                 }
-                if (line.total == 3 && line.line.fst.emptyCells + line.line.scd.emptyCells > 2 || line.total == 4) {
+                if (line.total == 3 && line.line.first.emptyCells + line.line.first.emptyCells > 2 || line.total == 4) {
                 }
             }
         }
@@ -279,16 +279,16 @@ namespace pbrain {
     {
         Axis axis(0, 0);
 
-        if (!checkPosOutBoard(_lastMoveAlly + _strongestLine.line.first.axis)
-            && _board[_lastMoveAlly.y + _strongestLine.line.first.axis.y]
-                     [_lastMoveAlly.x + _strongestLine.line.first.axis.x]
+        if (!checkPosOutBoard(_strongestLinePos + _strongestLine.line.first.axis)
+            && _board[_strongestLinePos.y + _strongestLine.line.first.axis.y]
+                     [_strongestLinePos.x + _strongestLine.line.first.axis.x]
                    == Cell::ALLY) {
             axis = _strongestLine.line.first.axis;
             return axis;
         }
-        if (!checkPosOutBoard(_lastMoveAlly + _strongestLine.line.second.axis)
-            && _board[_lastMoveAlly.y + _strongestLine.line.second.axis.y]
-                     [_lastMoveAlly.x + _strongestLine.line.second.axis.x]
+        if (!checkPosOutBoard(_strongestLinePos + _strongestLine.line.second.axis)
+            && _board[_strongestLinePos.y + _strongestLine.line.second.axis.y]
+                     [_strongestLinePos.x + _strongestLine.line.second.axis.x]
                    == Cell::ALLY) {
             axis = _strongestLine.line.second.axis;
             return axis;
@@ -316,6 +316,7 @@ namespace pbrain {
                 return tmpPos;
             }
         }
+        return std::nullopt;
     }
 
     void Brain::calculateNextMove(std::vector<Line> lines)

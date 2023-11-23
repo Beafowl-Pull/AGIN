@@ -29,6 +29,11 @@ struct Axis
         {
             return {this->x * factor, this->y * factor};
         }
+
+        bool operator==(const Axis &other) const
+        {
+            return (this->x == other.x && this->y == other.y);
+        }
 };
 
 struct Position
