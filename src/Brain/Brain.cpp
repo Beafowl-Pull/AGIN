@@ -109,7 +109,7 @@ namespace pbrain {
             _lastAllyIsDefense = true;
             return;
         }
-        if (checkFork(allyLines.value(), _lastMoveAlly)){
+        if (checkFork(allyLines.value(), _lastMoveAlly)) {
             _lastAllyIsDefense = false;
             return;
         } else if (checkFork(enemyLines.value(), _lastMoveEnemy)) {
@@ -325,7 +325,8 @@ namespace pbrain {
         if (_strongestLine == max) {
             _strongestLinePos = _lastMoveAlly;
         }
-        //dcp ici on check si la strongest est bloquée psk le last move peut ne pas en faire partie, qu'il soit un move d'attack ou pas
+        // dcp ici on check si la strongest est bloquée psk le last move peut ne pas en faire partie, qu'il soit un move
+        // d'attack ou pas
         if (_strongestLine.line.first.emptyCells == 0 && _strongestLine.line.second.emptyCells == 0) {
             res = checkSides();
         } else {
