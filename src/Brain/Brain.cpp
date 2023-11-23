@@ -169,7 +169,7 @@ namespace pbrain {
             if (!res.has_value()) {
                 res = checkWin(axisPair.second, axisPair.first, total, pos);
             }
-            if (res.has_value(), && printable) {
+            if (res.has_value(), &&printable) {
                 addMove(res.value(), Cell::ALLY);
                 std::cout << res.value().x << "," << res.value().y << std::endl;
                 return std::nullopt;
@@ -194,9 +194,7 @@ namespace pbrain {
                 if (line.line.fst.axis == fst.axis || line.line.fst.axis == scd.axis) {
                     continue;
                 }
-                if (line.total == 3 && line.line.fst.emptyCells + line.line.scd.emptyCells > 2 ||
-                    line.total == 4) {
-                    
+                if (line.total == 3 && line.line.fst.emptyCells + line.line.scd.emptyCells > 2 || line.total == 4) {
                 }
             }
         }
