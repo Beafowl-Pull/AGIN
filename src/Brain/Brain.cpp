@@ -138,6 +138,10 @@ namespace pbrain {
         if (datas.emptyCells > 0) {
             auto blockCellPos = pos + (axis * (datas.align + 1 + datas.emptyCells));
             datas.afterSpaceAlign = checkAlignement(blockCellPos, axis, 0, pos);
+            if (datas.afterSpaceAlign == 0) {
+                return datas;
+            }
+            datas.afterSpaceEmptyCells = checkEmptySpace(blockCellPos + (axis * (datas.afterSpaceAlign)), axis, 0);
         }
         return datas;
     }
@@ -178,59 +182,64 @@ namespace pbrain {
         return lines;
     }
 
-    bool Brain::checkForkInAxis(AxisDatas fst, AxisDatas scd, int total, const Position &pos)
+    bool Brain::checkInlineFork(AxisDatas fst, AxisDatas scd, int total, const Position &pos)
     {
-        if (fst.emptyCells > 0 && scd.emptyCells > 1) {
-            Position posToPlay(pos + (scd.axis * (scd.align + 1)));
+        if ((total + fst.afterSpaceAlign == 3 && fst.emptyCells == 1 && scd.emptyCells > 0 && fst.afterSpaceEmptyCells > 0)
+           || (total == 3 && fst.emptyCells > 1 && scd.emptyCells > 0)) {
+            auto posToPlay = pos + (fst.axis * (1 + fst.align));
             addMove(posToPlay, Cell::ALLY);
             std::cout << posToPlay.x << "," << posToPlay.y << std::endl;
             return true;
-        } else if (fst.emptyCells == 0 && scd.emptyCells > 1) {
-            auto forkPos = pos + (scd.axis * (scd.align + 1));
-            _board[forkPos.y][forkPos.x] = _board[pos.y][pos.x];
-            auto lines = getLines(forkPos, false).value();
-            _board[forkPos.y][forkPos.x] = Cell::EMPTY;
-            for (auto line : lines) {
-                if (line.line.fst.axis == fst.axis || line.line.fst.axis == scd.axis) {
-                    continue;
-                }
-                if (line.total == 3 && line.line.fst.emptyCells + line.line.scd.emptyCells > 2 ||
-                    line.total == 4) {
-                    
-                }
-            }
         }
         return false;
     }
 
-    bool Brain::checkSplittedForkInAxis(AxisDatas fst, AxisDatas scd, int total, const Position &pos)
+    bool Brain::checkForkDanger(AxisDatas fst, AxisDatas scd, int total)
     {
-        if (fst.emptyCells == 1 && total + fst.afterSpaceAlign >= 3 && scd.emptyCells > 0) {
-            Position afterData(pos + (fst.axis * (fst.align + fst.emptyCells + fst.afterSpaceAlign + 1)));
-            if (checkPosOutBoard(afterData)) {
-                return (false);
-            }
-            Cell cellAfterData = _board[afterData.y][afterData.x];
-            if (cellAfterData == Cell::EMPTY) {
-                Position posToPlay(pos + (fst.axis * (fst.align + 1)));
-                addMove(posToPlay, Cell::ALLY);
-                std::cout << posToPlay.x << "," << posToPlay.y << std::endl;
+        if (total == 3 && fst.emptyCells > 1) {
+            return true;
+        } else if (total + fst.afterSpaceAlign == 3 && fst.emptyCells == 1 && (fst.afterSpaceEmptyCells > 0 || scd.emptyCells > 0)) {
+            return true;
+        } else if (total == 2 && fst.emptyCells > 2 && scd.emptyCells > 0) {
+            return true;
+        } else if (total + fst.afterSpaceAlign == 2 && fst.emptyCells == 1 && fst.afterSpaceEmptyCells > 0 && scd.emptyCells > 0) {
+            if (fst.afterSpaceEmptyCells > 1 || scd.emptyCells > 1) {
                 return true;
             }
         }
         return false;
     }
 
+    bool Brain::checkCrossFork(AxisDatas fst, AxisDatas scd, int total, const Position &pos)
+    {
+        if (checkForkDanger(fst, scd, total)) {
+            auto checkingPos = pos + (fst.axis * (1 + fst.align));
+            _board[checkingPos.y][checkingPos.x] = _board[pos.y][pos.x];
+            auto lines = getLines(checkingPos, false);
+            _board[checkingPos.y][checkingPos.x] = Cell::EMPTY;
+            for (auto line : lines) {
+                if (line.first.axis == fst.axis || line.first.axis == scd.axis) {
+                    continue;
+                }
+                line.total -= 1;
+                if (checkForkDanger(line.line.first, line.line.second, line.total) ||
+                    checkForkDanger(line.line.second, line.line.first, line.total)) {
+                    addMove(checkingPos, Cell::ALLY);
+                    std::cout << checkingPos.x << "," << checkingPos.y << std::endl;
+                    return true;
+                }
+            }
+        }
+    }
+
     bool Brain::checkFork(std::vector<Line> lines, const Position &pos)
     {
         for (auto line : lines) {
-            if (line.total >= 3) {
-                if (checkForkInAxis(line.line.first, line.line.second, line.total, pos)
-                    || checkForkInAxis(line.line.second, line.line.first, line.total, pos)) {
-                    return true;
-                }
-            } else if (checkSplittedForkInAxis(line.line.first, line.line.second, line.total, pos)
-                       || checkSplittedForkInAxis(line.line.second, line.line.first, line.total, pos)) {
+            if (checkInlineFork(line.line.first, line.line.second, line.total, pos)
+                || checkInlineFork(line.line.second, line.line.first, line.total, pos)) {
+                return true;
+            } else if (checkCrossFork(line.line.first, line.line.second, line.total, pos)
+                       || checkCrossFork(line.line.second, line.line.first, line.total, pos)) {
                 return true;
             }
         }

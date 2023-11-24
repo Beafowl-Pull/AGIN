@@ -97,12 +97,14 @@ struct AxisDatas
             : axis({0, 0}),
               align(0),
               emptyCells(0),
-              afterSpaceAlign(0)
+              afterSpaceAlign(0),
+              afterSpaceEmptyCells(0)
         {}
         Axis axis;
         std::size_t align;
         std::size_t emptyCells;
         std::size_t afterSpaceAlign;
+        std::size_t afterSpaceEmptyCells;
 };
 
 struct Line
