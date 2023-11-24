@@ -184,8 +184,9 @@ namespace pbrain {
 
     bool Brain::checkInlineFork(AxisDatas fst, AxisDatas scd, int total, const Position &pos)
     {
-        if ((total + fst.afterSpaceAlign == 3 && fst.emptyCells == 1 && scd.emptyCells > 0 && fst.afterSpaceEmptyCells > 0)
-           || (total == 3 && fst.emptyCells > 1 && scd.emptyCells > 0)) {
+        if ((total + fst.afterSpaceAlign == 3 && fst.emptyCells == 1 && scd.emptyCells > 0
+             && fst.afterSpaceEmptyCells > 0)
+            || (total == 3 && fst.emptyCells > 1 && scd.emptyCells > 0)) {
             auto posToPlay = pos + (fst.axis * (1 + fst.align));
             addMove(posToPlay, Cell::ALLY);
             std::cout << posToPlay.x << "," << posToPlay.y << std::endl;
@@ -198,11 +199,13 @@ namespace pbrain {
     {
         if (total == 3 && fst.emptyCells > 1) {
             return true;
-        } else if (total + fst.afterSpaceAlign == 3 && fst.emptyCells == 1 && (fst.afterSpaceEmptyCells > 0 || scd.emptyCells > 0)) {
+        } else if (total + fst.afterSpaceAlign == 3 && fst.emptyCells == 1
+                   && (fst.afterSpaceEmptyCells > 0 || scd.emptyCells > 0)) {
             return true;
         } else if (total == 2 && fst.emptyCells > 2 && scd.emptyCells > 0) {
             return true;
-        } else if (total + fst.afterSpaceAlign == 2 && fst.emptyCells == 1 && fst.afterSpaceEmptyCells > 0 && scd.emptyCells > 0) {
+        } else if (total + fst.afterSpaceAlign == 2 && fst.emptyCells == 1 && fst.afterSpaceEmptyCells > 0
+                   && scd.emptyCells > 0) {
             if (fst.afterSpaceEmptyCells > 1 || scd.emptyCells > 1) {
                 return true;
             }
@@ -222,8 +225,8 @@ namespace pbrain {
                     continue;
                 }
                 line.total -= 1;
-                if (checkForkDanger(line.line.first, line.line.second, line.total) ||
-                    checkForkDanger(line.line.second, line.line.first, line.total)) {
+                if (checkForkDanger(line.line.first, line.line.second, line.total)
+                    || checkForkDanger(line.line.second, line.line.first, line.total)) {
                     addMove(checkingPos, Cell::ALLY);
                     std::cout << checkingPos.x << "," << checkingPos.y << std::endl;
                     return true;
