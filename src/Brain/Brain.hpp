@@ -71,6 +71,12 @@ namespace pbrain {
 
             std::optional<Axis> getAlignAxis();
 
+            bool checkInlineFork(AxisDatas fst, AxisDatas scd, int total, const Position &pos);
+
+            bool checkForkDanger(AxisDatas fst, AxisDatas scd, int total);
+
+            bool checkCrossFork(AxisDatas fst, AxisDatas scd, int total, const Position &pos);
+
             Brain();
             ~Brain() = default;
 

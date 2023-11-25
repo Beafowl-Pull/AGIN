@@ -217,11 +217,18 @@ namespace pbrain {
     {
         if (checkForkDanger(fst, scd, total)) {
             auto checkingPos = pos + (fst.axis * (1 + fst.align));
+            if (checkPosOutBoard(checkingPos) || checkPosOutBoard(pos)) {
+                return false;
+            }
             _board[checkingPos.y][checkingPos.x] = _board[pos.y][pos.x];
             auto lines = getLines(checkingPos, false);
             _board[checkingPos.y][checkingPos.x] = Cell::EMPTY;
-            for (auto line : lines) {
-                if (line.first.axis == fst.axis || line.first.axis == scd.axis) {
+            if (!lines.has_value()) {
+                return (false);
+            }
+            for (auto line : lines.value()) {
+                // Il faut rechecker cette condition parce que je suis pas sur qu'elle soit bonne avec ce que j ai modif
+                if (line.line.first.axis == fst.axis || line.line.second.axis == scd.axis) {
                     continue;
                 }
                 line.total -= 1;
@@ -233,6 +240,7 @@ namespace pbrain {
                 }
             }
         }
+        return true;
     }
 
     bool Brain::checkFork(std::vector<Line> lines, const Position &pos)
