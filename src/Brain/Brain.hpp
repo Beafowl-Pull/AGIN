@@ -53,9 +53,11 @@ namespace pbrain {
 
             std::optional<std::vector<Line>> getLines(const Position &pos, bool printable = true);
 
-            bool checkForkInAxis(AxisDatas fst, AxisDatas scd, int total, const Position &pos);
+            bool checkInlineFork(AxisDatas fst, AxisDatas scd, int total, const Position &pos);
 
-            bool checkSplittedForkInAxis(AxisDatas fst, AxisDatas scd, int total, const Position &pos);
+            bool checkForkDanger(AxisDatas fst, AxisDatas scd, int total);
+
+            bool checkCrossFork(AxisDatas fst, AxisDatas scd, int total, const Position &pos);
 
             bool checkFork(std::vector<Line> lines, const Position &pos);
 

@@ -220,8 +220,8 @@ namespace pbrain {
             _board[checkingPos.y][checkingPos.x] = _board[pos.y][pos.x];
             auto lines = getLines(checkingPos, false);
             _board[checkingPos.y][checkingPos.x] = Cell::EMPTY;
-            for (auto line : lines) {
-                if (line.first.axis == fst.axis || line.first.axis == scd.axis) {
+            for (auto line : lines.value()) {
+                if (line.line.first.axis == fst.axis || line.line.first.axis == scd.axis) {
                     continue;
                 }
                 line.total -= 1;
@@ -233,6 +233,7 @@ namespace pbrain {
                 }
             }
         }
+        return false;
     }
 
     bool Brain::checkFork(std::vector<Line> lines, const Position &pos)
