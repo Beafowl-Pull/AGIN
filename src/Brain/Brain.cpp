@@ -217,6 +217,9 @@ namespace pbrain {
     {
         if (checkForkDanger(fst, scd, total)) {
             auto checkingPos = pos + (fst.axis * (1 + fst.align));
+            if (checkPosOutBoard(checkingPos) || checkPosOutBoard(pos)) {
+                return false;
+            }
             _board[checkingPos.y][checkingPos.x] = _board[pos.y][pos.x];
             auto lines = getLines(checkingPos, false);
             _board[checkingPos.y][checkingPos.x] = Cell::EMPTY;
