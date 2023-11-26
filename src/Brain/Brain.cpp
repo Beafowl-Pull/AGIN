@@ -18,6 +18,7 @@
 namespace pbrain {
     Brain::Brain()
         : _boardSize(0),
+          _strongestLinePos({0, 0}),
           _lastMoveAlly({0, 0}),
           _lastMoveEnemy({0, 0}),
           _empty(true)
@@ -76,7 +77,7 @@ namespace pbrain {
 
     Position Brain::getRandomMove()
     {
-        Position pos(0, 0);
+        Position pos(rand() % _boardSize, rand() % _boardSize);
 
         srand(time(NULL));
         for (; _board[pos.y][pos.x] != Cell::EMPTY; pos.x = rand() % _boardSize, pos.y = rand() % _boardSize)
@@ -154,7 +155,7 @@ namespace pbrain {
         return std::nullopt;
     }
 
-    std::optional<std::vector<Line>> Brain::getLines(const Position &pos)
+    std::optional<std::vector<Line>> Brain::getLines(const Position &pos, bool printable)
     {
         std::vector<Axis> neighborAxis = {{0, 1}, {1, 0}, {-1, -1}, {1, -1}};
         std::vector<Line> lines;
@@ -168,7 +169,7 @@ namespace pbrain {
             if (!res.has_value()) {
                 res = checkWin(axisPair.second, axisPair.first, total, pos);
             }
-            if (res.has_value()) {
+            if (res.has_value() && printable) {
                 addMove(res.value(), Cell::ALLY);
                 std::cout << res.value().x << "," << res.value().y << std::endl;
                 return std::nullopt;
@@ -184,6 +185,18 @@ namespace pbrain {
             addMove(posToPlay, Cell::ALLY);
             std::cout << posToPlay.x << "," << posToPlay.y << std::endl;
             return true;
+        } else if (fst.emptyCells == 0 && scd.emptyCells > 1) {
+            auto forkPos = pos + (scd.axis * (scd.align + 1));
+            _board[forkPos.y][forkPos.x] = _board[pos.y][pos.x];
+            auto lines = getLines(forkPos, false).value();
+            _board[forkPos.y][forkPos.x] = Cell::EMPTY;
+            for (auto line : lines) {
+                if (line.line.first.axis == fst.axis || line.line.first.axis == scd.axis) {
+                    continue;
+                }
+                if (line.total == 3 && line.line.first.emptyCells + line.line.first.emptyCells > 2 || line.total == 4) {
+                }
+            }
         }
         return false;
     }
@@ -262,6 +275,50 @@ namespace pbrain {
         return std::nullopt;
     }
 
+    std::optional<Axis> Brain::getAlignAxis()
+    {
+        Axis axis(0, 0);
+
+        if (!checkPosOutBoard(_strongestLinePos + _strongestLine.line.first.axis)
+            && _board[_strongestLinePos.y + _strongestLine.line.first.axis.y]
+                     [_strongestLinePos.x + _strongestLine.line.first.axis.x]
+                   == Cell::ALLY) {
+            axis = _strongestLine.line.first.axis;
+            return axis;
+        }
+        if (!checkPosOutBoard(_strongestLinePos + _strongestLine.line.second.axis)
+            && _board[_strongestLinePos.y + _strongestLine.line.second.axis.y]
+                     [_strongestLinePos.x + _strongestLine.line.second.axis.x]
+                   == Cell::ALLY) {
+            axis = _strongestLine.line.second.axis;
+            return axis;
+        }
+        return std::nullopt;
+    }
+
+    std::optional<Position> Brain::checkSides()
+    {
+        Position pos(_strongestLinePos);
+        std::optional<Axis> axis = getAlignAxis();
+
+        if (axis == std::nullopt) {
+            return std::nullopt;
+        }
+        Axis side(axis.value().y, axis.value().x * -1);
+        std::pair<Axis, Axis> sides(side, side * -1);
+        for (; _board[pos.y][pos.x] != Cell::ALLY; pos = pos + axis.value()) {
+            auto tmpPos = pos + sides.first;
+            if (_board[tmpPos.y][tmpPos.x] == Cell::EMPTY) {
+                return tmpPos;
+            }
+            tmpPos = tmpPos + sides.second;
+            if (_board[tmpPos.y][tmpPos.x] == Cell::EMPTY) {
+                return tmpPos;
+            }
+        }
+        return std::nullopt;
+    }
+
     void Brain::calculateNextMove(std::vector<Line> lines)
     {
         std::optional<Position> res;
@@ -269,8 +326,12 @@ namespace pbrain {
         for (auto &line : lines) {
             max = compareLines(max, line);
         }
-        if (max.line.first.emptyCells == 0 && max.line.second.emptyCells == 0) {
-            res = getRandomMove();
+        _strongestLine = compareLines(_strongestLine, max);
+        if (_strongestLine == max) {
+            _strongestLinePos = _lastMoveAlly;
+        }
+        if (_strongestLine.line.first.emptyCells == 0 && _strongestLine.line.second.emptyCells == 0) {
+            res = checkSides();
         } else {
             res = checkMove(max.line.first, max.line.second, max.total);
             if (!res.has_value()) {
@@ -280,7 +341,7 @@ namespace pbrain {
                 }
             }
         }
-        while (!res.has_value() || _board[res.value().y][res.value().x] != Cell::EMPTY) {
+        if (res == std::nullopt) {
             res = getRandomMove();
         }
         addMove(res.value(), Cell::ALLY);
